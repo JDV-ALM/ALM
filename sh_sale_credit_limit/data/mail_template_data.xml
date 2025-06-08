@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sh_sale_order_partner_credit_limit_mail_template" model="mail.template">
+        <field name="name">Sale Order - On Hold</field>
+        <field name="model_id" ref="sale.model_sale_order" />
+        <field name="subject">Sale Order On Hold # {{object.name}}</field>
+        <field name="email_from">{{object.company_id.email}}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <t t-set="doc_name"
+                        t-value="'quotation' if object.state in ('draft', 'sent') else 'order'" />
+                    Dear <strong>
+                        <t t-out="object.partner_id.name or ''" />
+                    </strong>, <t
+                        t-if="object.partner_id.parent_id"> (<t
+                            t-out="object.partner_id.parent_id.name or ''" />) </t>
+                    <br />
+                    <br /> Here
+                    is <t t-if="ctx.get('proforma')">
+                        in attachment your pro-forma invoice
+                    </t>
+                    <t
+                        t-else=""> the <t t-out="doc_name or ''" /> <strong t-out="object.name or ''" />
+                    </t>
+                    <t
+                        t-if="object.origin"> (with reference: <t t-out="object.origin or ''"></t> ) </t>
+                    <t
+                        t-foreach=" object.pricelist_id" t-as="pricelist"> amounting in <strong
+                            t-out="format_amount(object.amount_total, pricelist.currency_id) or ''" />
+                    </t>
+                    from <t t-out="object.company_id.name or ''" />. <br />
+                    <br /> Do not hesitate to
+                    contact us if you have any question. </p>
+            </div>
+        </field>
+        <field name="report_template_ids" eval="[(4, ref('sale.action_report_saleorder'))]" />
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True" />
+    </record>
+</odoo>
