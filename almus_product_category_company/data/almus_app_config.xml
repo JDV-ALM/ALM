@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="app_config_product_category_company" model="almus.app.config">
+            <!-- Nombre técnico SIN prefijo almus_ -->
+            <field name="name">product_category_company</field>
+            
+            <!-- Nombre visible en la interfaz -->
+            <field name="display_name">Categorías de Producto por Empresa</field>
+            
+            <!-- Referencia al módulo usando el ID correcto -->
+            <field name="module_id" ref="base.module_almus_product_category_company"/>
+            
+            <!-- Descripción clara de qué hace -->
+            <field name="description">
+                Restringe las categorías de producto por empresa, evitando que 
+                se compartan entre todas las compañías de la base de datos.
+                
+                Cuando está activado:
+                - Cada categoría pertenecerá a una empresa específica
+                - Los usuarios solo verán las categorías de su empresa actual
+                - Se puede configurar qué categorías compartir entre empresas
+                
+                Activar si necesitas que cada empresa tenga sus propias categorías
+                independientes para organizar sus productos.
+            </field>
+            
+            <!-- Categoría apropiada -->
+            <field name="category">inventory</field>
+            
+            <!-- Orden de aparición (menor = primero) -->
+            <field name="sequence">10</field>
+            
+            <!-- SIEMPRE False por defecto -->
+            <field name="is_enabled">False</field>
+            
+            <!-- Icono FontAwesome -->
+            <field name="icon">fa-sitemap</field>
+            
+            <!-- Color (1-12) -->
+            <field name="color">3</field>
+        </record>
+    </data>
+</odoo>

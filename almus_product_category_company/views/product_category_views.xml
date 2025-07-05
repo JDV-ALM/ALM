@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Heredar Vista de Formulario de Categoría de Producto -->
+    <record id="product_category_form_view_inherit" model="ir.ui.view">
+        <field name="name">product.category.form.almus.company</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Agregar campo company_id después de parent_id -->
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="company_id" 
+                       groups="base.group_multi_company"
+                       options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Heredar Vista de Lista de Categoría de Producto -->
+    <record id="product_category_list_view_inherit" model="ir.ui.view">
+        <field name="name">product.category.list.almus.company</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_list_view"/>
+        <field name="arch" type="xml">
+            <!-- Agregar company_id a la vista de lista -->
+            <xpath expr="//field[@name='display_name']" position="after">
+                <field name="company_id" 
+                       groups="base.group_multi_company"
+                       optional="show"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Heredar Vista de Búsqueda de Categoría de Producto -->
+    <record id="product_category_search_view_inherit" model="ir.ui.view">
+        <field name="name">product.category.search.almus.company</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_search_view"/>
+        <field name="arch" type="xml">
+            <!-- Agregar filtros de empresa -->
+            <xpath expr="//search" position="inside">
+                <field name="company_id" groups="base.group_multi_company"/>
+                <separator/>
+                <filter string="Mi Empresa" 
+                        name="filter_my_company" 
+                        domain="[('company_id', '=', company_id)]"
+                        groups="base.group_multi_company"/>
+                <filter string="Categorías Compartidas" 
+                        name="filter_shared" 
+                        domain="[('company_id', '=', False)]"
+                        groups="base.group_multi_company"/>
+                <separator/>
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Empresa" 
+                            name="groupby_company" 
+                            domain="[]" 
+                            context="{'group_by': 'company_id'}"
+                            groups="base.group_multi_company"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Actualizar Vista de Formulario de Producto -->
+    <record id="product_template_form_view_inherit" model="ir.ui.view">
+        <field name="name">product.template.form.almus.categ.company</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Asegurar que la selección de categoría esté filtrada por empresa -->
+            <xpath expr="//field[@name='categ_id']" position="attributes">
+                <attribute name="domain">['|', ('company_id', '=', False), ('company_id', 'in', [company_id, False])]</attribute>
+                <attribute name="context">{'default_company_id': company_id}</attribute>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Vista de formulario rápido para crear categorías -->
+    <record id="product_category_form_view_quick_create" model="ir.ui.view">
+        <field name="name">product.category.form.quick.almus</field>
+        <field name="model">product.category</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name" placeholder="Nombre de la categoría"/>
+                    <field name="parent_id" 
+                           domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
+                    <field name="company_id" 
+                           invisible="1" 
+                           groups="base.group_multi_company"/>
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>

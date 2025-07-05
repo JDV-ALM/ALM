@@ -1,0 +1,2 @@
+ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_almus_feature_mixin_user,almus.feature.mixin.user,model_almus_feature_mixin,base.group_user,1,0,0,0
