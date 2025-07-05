@@ -56,31 +56,20 @@
                     
                     <!-- Apps Management Section -->
                     <field name="almus_app_ids" invisible="1"/>
-                    <div t-foreach="almus_app_ids" t-as="app" class="row mt16 o_settings_container">
-                        <div class="col-12 o_setting_box">
-                            <div class="o_setting_left_pane">
-                                <button name="action_toggle_app" 
-                                        type="object"
-                                        t-att-context="{'app_id': app.id, 'enable': not app.is_enabled}"
-                                        class="btn btn-link">
-                                    <i t-attf-class="fa fa-2x #{app.is_enabled and 'fa-toggle-on text-success' or 'fa-toggle-off text-muted'}"/>
-                                </button>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label>
-                                    <b><t t-esc="app.display_name"/></b>
-                                    <span t-if="app.is_enabled" class="badge rounded-pill text-bg-success ms-2">Activo</span>
-                                    <span t-else="" class="badge rounded-pill text-bg-secondary ms-2">Inactivo</span>
-                                </label>
-                                <div class="text-muted">
-                                    <t t-esc="app.description"/>
-                                </div>
-                                <div t-if="app.category" class="mt-1">
-                                    <small class="text-muted">
-                                        <i class="fa fa-tag"/> <t t-esc="dict(app._fields['category'].selection).get(app.category, app.category)"/>
-                                    </small>
-                                </div>
-                            </div>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12">
+                            <p class="text-muted">
+                                <i class="fa fa-info-circle"/> Active o desactive las funcionalidades según sus necesidades.
+                            </p>
+                            <field name="almus_app_ids" widget="one2many" mode="tree">
+                                <list string="Aplicaciones" create="false" delete="false" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="display_name" string="Aplicación" readonly="1"/>
+                                    <field name="is_enabled" string="Habilitado" widget="boolean_toggle"/>
+                                    <field name="category" string="Categoría" readonly="1"/>
+                                    <field name="description" string="Descripción" readonly="1" optional="show"/>
+                                </list>
+                            </field>
                         </div>
                     </div>
                     

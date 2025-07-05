@@ -7,11 +7,12 @@ import base64
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
     
-    # Campo relacional para apps
-    almus_app_ids = fields.Many2many(
+    # Campo relacional para apps - cambiado a readonly=False para permitir edición inline
+    almus_app_ids = fields.One2many(
         'almus.app.config',
         string='Aplicaciones Almus',
         compute='_compute_almus_app_ids',
+        readonly=False
     )
     
     # Campos computados para estadísticas
@@ -25,15 +26,16 @@ class ResConfigSettings(models.TransientModel):
         compute='_compute_almus_stats',
     )
     
-    @api.depends('company_id')
     def _compute_almus_app_ids(self):
         """Obtener todas las aplicaciones Almus"""
         for settings in self:
+            # res.config.settings no tiene company_id, usar env.company
+            current_company = self.env.company
             apps = self.env['almus.app.config'].search([
                 ('active', '=', True),
                 '|',
                 ('company_ids', '=', False),
-                ('company_ids', 'in', [settings.company_id.id] if settings.company_id else [])
+                ('company_ids', 'in', [current_company.id])
             ])
             settings.almus_app_ids = apps
     
@@ -43,28 +45,6 @@ class ResConfigSettings(models.TransientModel):
         for settings in self:
             settings.almus_total_apps = len(settings.almus_app_ids)
             settings.almus_enabled_apps = len(settings.almus_app_ids.filtered('is_enabled'))
-    
-    def action_toggle_app(self):
-        """Activar/desactivar una aplicación Almus"""
-        self.ensure_one()
-        app_id = self._context.get('app_id')
-        enable = self._context.get('enable', False)
-        
-        if not app_id:
-            return
-            
-        app = self.env['almus.app.config'].browse(app_id)
-        if app.exists():
-            if enable:
-                app.action_enable()
-            else:
-                app.action_disable()
-        
-        # Recargar la vista
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
-        }
     
     def action_almus_refresh_apps(self):
         """Refrescar la lista de aplicaciones Almus"""
