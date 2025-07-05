@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista Tree Simple para mostrar en popup -->
+    <record id="view_almus_app_config_simple_tree" model="ir.ui.view">
+        <field name="name">almus.app.config.simple.tree</field>
+        <field name="model">almus.app.config</field>
+        <field name="arch" type="xml">
+            <list string="Aplicaciones Almus" create="false" delete="false" edit="false">
+                <field name="sequence" widget="handle" readonly="1"/>
+                <field name="display_name" string="Aplicación"/>
+                <field name="category" string="Categoría"/>
+                <field name="is_enabled" string="Habilitado" readonly="1"/>
+                <field name="module_id" string="Módulo" optional="hide"/>
+                <field name="description" string="Descripción" optional="show"/>
+            </list>
+        </field>
+    </record>
+</odoo>

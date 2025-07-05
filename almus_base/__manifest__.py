@@ -20,6 +20,7 @@
     "application": False,  # No debe ser aplicación si solo aparece en configuración
     "data": [
         "security/ir.model.access.csv",
+        "views/almus_app_config_views.xml",
         "views/res_config_settings_views.xml",
     ],
 }
