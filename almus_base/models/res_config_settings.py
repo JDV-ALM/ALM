@@ -117,20 +117,21 @@ class ResConfigSettings(models.TransientModel):
     
     def action_open_almus_apps(self):
         """Abrir vista simple de aplicaciones Almus"""
-        # Crear una vista tree simple si no existe
-        tree_view = self.env.ref('almus_base.view_almus_app_config_simple_tree', raise_if_not_found=False)
-        
         return {
             'type': 'ir.actions.act_window',
             'name': _('Aplicaciones Almus'),
             'res_model': 'almus.app.config',
-            'view_mode': 'tree',
-            'view_id': tree_view.id if tree_view else False,
+            'view_mode': 'list,form',
+            'views': [
+                (self.env.ref('almus_base.view_almus_app_config_simple_list').id, 'list'),
+                (self.env.ref('almus_base.view_almus_app_config_form').id, 'form'),
+            ],
             'target': 'new',
             'context': {
-                'search_default_active': 1,
                 'create': False,
                 'delete': False,
+                'edit': False,
+                'search_default_active': 1,
             }
         }
     
