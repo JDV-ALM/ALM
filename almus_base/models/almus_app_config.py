@@ -1,23 +1,4 @@
-@api.onchange('is_enabled')
-    def _onchange_is_enabled(self):
-        """Manejar cambios en el estado habilitado"""
-        for app in self:
-            if app.is_enabled and not app._origin.is_enabled:
-                # Se está habilitando
-                try:
-                    self._check_dependencies()
-                except ValidationError as e:
-                    app.is_enabled = False
-                    raise e
-                self._post_enable_actions()
-            elif not app.is_enabled and app._origin.is_enabled:
-                # Se está deshabilitando
-                if not app.can_disable:
-                    app.is_enabled = True
-                    raise UserError(_(
-                        'No se puede deshabilitar "%s" porque otras aplicaciones dependen de ella.'
-                    ) % app.display_name)
-                self._post_disable_actions()from odoo import models, fields, api, _
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 import logging
 
@@ -186,6 +167,8 @@ class AlmusAppConfig(models.Model):
         # Ejecutar acciones post-habilitación
         self._post_enable_actions()
         
+        _logger.info('Aplicación %s habilitada por %s', self.name, self.env.user.name)
+        
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -214,6 +197,8 @@ class AlmusAppConfig(models.Model):
         # Ejecutar acciones post-deshabilitación
         self._post_disable_actions()
         
+        _logger.info('Aplicación %s deshabilitada por %s', self.name, self.env.user.name)
+        
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -237,12 +222,12 @@ class AlmusAppConfig(models.Model):
     def _post_enable_actions(self):
         """Acciones a ejecutar después de habilitar la aplicación"""
         # Este método puede ser sobrescrito por cada aplicación
-        _logger.info('Aplicación %s habilitada por %s', self.name, self.env.user.name)
+        pass
     
     def _post_disable_actions(self):
         """Acciones a ejecutar después de deshabilitar la aplicación"""
         # Este método puede ser sobrescrito por cada aplicación
-        _logger.info('Aplicación %s deshabilitada por %s', self.name, self.env.user.name)
+        pass
     
     @api.model
     def get_enabled_apps(self, company_id=None):
