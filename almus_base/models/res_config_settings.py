@@ -7,139 +7,81 @@ import base64
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
     
-    # Campos computados para mostrar información
-    almus_apps_summary = fields.Html(
-        string='Resumen de Aplicaciones',
-        compute='_compute_almus_apps_summary',
-        readonly=True
+    # Campo relacional para apps
+    almus_app_ids = fields.Many2many(
+        'almus.app.config',
+        string='Aplicaciones Almus',
+        compute='_compute_almus_app_ids',
     )
     
+    # Campos computados para estadísticas
     almus_total_apps = fields.Integer(
         string='Total de Aplicaciones',
         compute='_compute_almus_stats',
-        readonly=True
     )
     
     almus_enabled_apps = fields.Integer(
         string='Aplicaciones Habilitadas',
         compute='_compute_almus_stats',
-        readonly=True
     )
     
-    def _compute_almus_apps_summary(self):
-        """Generar resumen HTML de aplicaciones con controles"""
+    @api.depends('company_id')
+    def _compute_almus_app_ids(self):
+        """Obtener todas las aplicaciones Almus"""
         for settings in self:
-            apps = self.env['almus.app.config'].search([('active', '=', True)])
-            
-            if not apps:
-                settings.almus_apps_summary = '<p class="text-muted">No hay aplicaciones Almus configuradas.</p>'
-                continue
-            
-            html_parts = ['<div class="almus-apps-config">']
-            
-            # Agrupar por categoría
-            categories = {}
-            for app in apps:
-                if app.category not in categories:
-                    categories[app.category] = []
-                categories[app.category].append(app)
-            
-            for category, cat_apps in categories.items():
-                cat_name = dict(apps._fields['category'].selection).get(category, category)
-                html_parts.append(f'<div class="mt-4">')
-                html_parts.append(f'<h5>{cat_name}</h5>')
-                
-                for app in sorted(cat_apps, key=lambda a: a.sequence):
-                    app_id = app.id
-                    checked = 'checked' if app.is_enabled else ''
-                    disabled = '' if app.can_disable or not app.is_enabled else 'disabled'
-                    
-                    html_parts.append(f'''
-                        <div class="o_setting_box mb-2">
-                            <div class="o_setting_left_pane">
-                                <div class="form-check">
-                                    <input type="checkbox" 
-                                           class="form-check-input almus-app-toggle" 
-                                           id="almus_app_{app_id}"
-                                           data-app-id="{app_id}"
-                                           {checked} {disabled}/>
-                                </div>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="almus_app_{app_id}" class="o_form_label">
-                                    {app.display_name}
-                                </label>
-                                <div class="text-muted small">{app.description or ''}</div>
-                            </div>
-                        </div>
-                    ''')
-                
-                html_parts.append('</div>')
-            
-            html_parts.append('</div>')
-            
-            # JavaScript para manejar los cambios
-            html_parts.append('''
-                <script>
-                    $(document).ready(function() {
-                        $('.almus-app-toggle').on('change', function() {
-                            var $checkbox = $(this);
-                            var appId = $checkbox.data('app-id');
-                            var isEnabled = $checkbox.is(':checked');
-                            
-                            // Llamar al método Python para cambiar el estado
-                            self._rpc({
-                                model: 'almus.app.config',
-                                method: isEnabled ? 'action_enable' : 'action_disable',
-                                args: [[appId]],
-                            }).then(function(result) {
-                                // Recargar la vista si es necesario
-                                if (result && result.type === 'ir.actions.client') {
-                                    self.do_action(result);
-                                }
-                            }).catch(function(error) {
-                                // Revertir el cambio si hay error
-                                $checkbox.prop('checked', !isEnabled);
-                            });
-                        });
-                    });
-                </script>
-            ''')
-            
-            settings.almus_apps_summary = ''.join(html_parts)
+            apps = self.env['almus.app.config'].search([
+                ('active', '=', True),
+                '|',
+                ('company_ids', '=', False),
+                ('company_ids', 'in', [settings.company_id.id] if settings.company_id else [])
+            ])
+            settings.almus_app_ids = apps
     
+    @api.depends('almus_app_ids', 'almus_app_ids.is_enabled')
     def _compute_almus_stats(self):
         """Calcular estadísticas de aplicaciones"""
         for settings in self:
-            apps = self.env['almus.app.config'].search([('active', '=', True)])
-            settings.almus_total_apps = len(apps)
-            settings.almus_enabled_apps = len(apps.filtered('is_enabled'))
+            settings.almus_total_apps = len(settings.almus_app_ids)
+            settings.almus_enabled_apps = len(settings.almus_app_ids.filtered('is_enabled'))
     
-    def action_open_almus_apps(self):
-        """Abrir vista simple de aplicaciones Almus"""
+    def action_toggle_app(self):
+        """Activar/desactivar una aplicación Almus"""
+        self.ensure_one()
+        app_id = self._context.get('app_id')
+        enable = self._context.get('enable', False)
+        
+        if not app_id:
+            return
+            
+        app = self.env['almus.app.config'].browse(app_id)
+        if app.exists():
+            if enable:
+                app.action_enable()
+            else:
+                app.action_disable()
+        
+        # Recargar la vista
         return {
-            'type': 'ir.actions.act_window',
-            'name': _('Aplicaciones Almus'),
-            'res_model': 'almus.app.config',
-            'view_mode': 'list,form',
-            'views': [
-                (self.env.ref('almus_base.view_almus_app_config_simple_list').id, 'list'),
-                (self.env.ref('almus_base.view_almus_app_config_form').id, 'form'),
-            ],
-            'target': 'new',
-            'context': {
-                'create': False,
-                'delete': False,
-                'edit': False,
-                'search_default_active': 1,
-            }
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+    
+    def action_almus_refresh_apps(self):
+        """Refrescar la lista de aplicaciones Almus"""
+        # Detectar nuevos módulos Almus instalados
+        self.env['ir.module.module'].sudo()._update_almus_dependencies()
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
         }
     
     def action_export_almus_config(self):
         """Exportar configuración actual de aplicaciones Almus"""
         self.ensure_one()
         
-        apps = self.env['almus.app.config'].search([('active', '=', True)])
+        apps = self.almus_app_ids
+        
         config_data = {
             'company': self.env.company.name,
             'date': fields.Datetime.now().isoformat(),
@@ -173,13 +115,3 @@ class ResConfigSettings(models.TransientModel):
             'url': f'/web/content/{attachment.id}?download=true',
             'target': 'self',
         }
-    
-    def action_toggle_almus_app(self, app_id, enable):
-        """Método auxiliar para cambiar estado de aplicación desde la vista"""
-        app = self.env['almus.app.config'].browse(app_id)
-        if app.exists():
-            if enable:
-                return app.action_enable()
-            else:
-                return app.action_disable()
-        return False

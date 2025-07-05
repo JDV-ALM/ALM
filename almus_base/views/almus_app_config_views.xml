@@ -5,13 +5,26 @@
         <field name="name">almus.app.config.simple.list</field>
         <field name="model">almus.app.config</field>
         <field name="arch" type="xml">
-            <list string="Aplicaciones Almus" create="false" delete="false" edit="false">
-                <field name="sequence" widget="handle" readonly="1"/>
-                <field name="display_name" string="Aplicación"/>
-                <field name="category" string="Categoría"/>
-                <field name="is_enabled" string="Habilitado" readonly="1"/>
-                <field name="module_id" string="Módulo" optional="hide"/>
-                <field name="description" string="Descripción" optional="show"/>
+            <list string="Aplicaciones Almus" create="false" delete="false" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="display_name" string="Aplicación" readonly="1"/>
+                <field name="category" string="Categoría" readonly="1"/>
+                <field name="is_enabled" string="Habilitado" widget="boolean_toggle"/>
+                <field name="can_disable" invisible="1"/>
+                <field name="module_id" string="Módulo" optional="hide" readonly="1"/>
+                <field name="description" string="Descripción" optional="show" readonly="1"/>
+                <button name="action_enable" 
+                        type="object" 
+                        string="Habilitar" 
+                        class="btn-success"
+                        invisible="is_enabled"
+                        icon="fa-check"/>
+                <button name="action_disable" 
+                        type="object" 
+                        string="Deshabilitar"
+                        class="btn-warning" 
+                        invisible="not is_enabled or not can_disable"
+                        icon="fa-times"/>
             </list>
         </field>
     </record>
@@ -62,7 +75,8 @@
         <field name="view_mode">list,form</field>
         <field name="view_id" ref="view_almus_app_config_simple_list"/>
         <field name="search_view_id" eval="False"/>
-        <field name="context">{'create': False, 'delete': False}</field>
+        <field name="target">new</field>
+        <field name="context">{'create': False, 'delete': False, 'edit': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No hay aplicaciones Almus configuradas

@@ -1,4 +1,23 @@
-from odoo import models, fields, api, _
+@api.onchange('is_enabled')
+    def _onchange_is_enabled(self):
+        """Manejar cambios en el estado habilitado"""
+        for app in self:
+            if app.is_enabled and not app._origin.is_enabled:
+                # Se está habilitando
+                try:
+                    self._check_dependencies()
+                except ValidationError as e:
+                    app.is_enabled = False
+                    raise e
+                self._post_enable_actions()
+            elif not app.is_enabled and app._origin.is_enabled:
+                # Se está deshabilitando
+                if not app.can_disable:
+                    app.is_enabled = True
+                    raise UserError(_(
+                        'No se puede deshabilitar "%s" porque otras aplicaciones dependen de ella.'
+                    ) % app.display_name)
+                self._post_disable_actions()from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 import logging
 
