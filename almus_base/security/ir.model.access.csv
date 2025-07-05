@@ -1,7 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_almus_app_config_user,almus.app.config.user,model_almus_app_config,group_almus_user,1,0,0,0
-access_almus_app_config_manager,almus.app.config.manager,model_almus_app_config,group_almus_manager,1,1,1,1
-access_almus_config_log_user,almus.config.log.user,model_almus_config_log,group_almus_user,1,0,0,0
-access_almus_config_log_manager,almus.config.log.manager,model_almus_config_log,group_almus_manager,1,1,1,1
+access_almus_app_config_user,almus.app.config.user,model_almus_app_config,base.group_user,1,0,0,0
 access_almus_app_config_system,almus.app.config.system,model_almus_app_config,base.group_system,1,1,1,1
-access_almus_config_log_system,almus.config.log.system,model_almus_config_log,base.group_system,1,1,1,1

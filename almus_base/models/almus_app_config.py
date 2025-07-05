@@ -164,9 +164,6 @@ class AlmusAppConfig(models.Model):
         # Habilitar
         self.is_enabled = True
         
-        # Registrar en el log
-        self._create_config_log('enable')
-        
         # Ejecutar acciones post-habilitación
         self._post_enable_actions()
         
@@ -195,9 +192,6 @@ class AlmusAppConfig(models.Model):
         # Deshabilitar
         self.is_enabled = False
         
-        # Registrar en el log
-        self._create_config_log('disable')
-        
         # Ejecutar acciones post-deshabilitación
         self._post_disable_actions()
         
@@ -220,16 +214,6 @@ class AlmusAppConfig(models.Model):
         
         action = self.config_action_id.sudo().read()[0]
         return action
-    
-    def _create_config_log(self, action):
-        """Crear registro en el log de configuración"""
-        self.env['almus.config.log'].create({
-            'app_config_id': self.id,
-            'action': action,
-            'user_id': self.env.user.id,
-            'date': fields.Datetime.now(),
-            'company_id': self.env.company.id,
-        })
     
     def _post_enable_actions(self):
         """Acciones a ejecutar después de habilitar la aplicación"""

@@ -1,13 +1,12 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 import json
+import base64
+from datetime import datetime
 
 
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
-
-    # Campos dinámicos para cada aplicación Almus
-    # Se generarán automáticamente basándose en almus.app.config
     
     almus_apps_summary = fields.Html(
         string='Resumen de Aplicaciones',
@@ -72,16 +71,6 @@ class ResConfigSettings(models.TransientModel):
             'view_mode': 'tree,form',
             'target': 'current',
             'context': {'search_default_active': 1}
-        }
-    
-    def action_view_almus_logs(self):
-        """Ver logs de configuración"""
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Historial de Cambios'),
-            'res_model': 'almus.config.log',
-            'view_mode': 'tree,form',
-            'target': 'current',
         }
     
     @api.model
