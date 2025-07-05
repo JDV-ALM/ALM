@@ -7,14 +7,6 @@ import base64
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
     
-    # Campo relacional para apps - cambiado a readonly=False para permitir edición inline
-    almus_app_ids = fields.One2many(
-        'almus.app.config',
-        string='Aplicaciones Almus',
-        compute='_compute_almus_app_ids',
-        readonly=False
-    )
-    
     # Campos computados para estadísticas
     almus_total_apps = fields.Integer(
         string='Total de Aplicaciones',
@@ -26,10 +18,9 @@ class ResConfigSettings(models.TransientModel):
         compute='_compute_almus_stats',
     )
     
-    def _compute_almus_app_ids(self):
-        """Obtener todas las aplicaciones Almus"""
+    def _compute_almus_stats(self):
+        """Calcular estadísticas de aplicaciones"""
         for settings in self:
-            # res.config.settings no tiene company_id, usar env.company
             current_company = self.env.company
             apps = self.env['almus.app.config'].search([
                 ('active', '=', True),
@@ -37,14 +28,13 @@ class ResConfigSettings(models.TransientModel):
                 ('company_ids', '=', False),
                 ('company_ids', 'in', [current_company.id])
             ])
-            settings.almus_app_ids = apps
+            settings.almus_total_apps = len(apps)
+            settings.almus_enabled_apps = len(apps.filtered('is_enabled'))
     
-    @api.depends('almus_app_ids', 'almus_app_ids.is_enabled')
-    def _compute_almus_stats(self):
-        """Calcular estadísticas de aplicaciones"""
-        for settings in self:
-            settings.almus_total_apps = len(settings.almus_app_ids)
-            settings.almus_enabled_apps = len(settings.almus_app_ids.filtered('is_enabled'))
+    def action_almus_manage_apps(self):
+        """Abrir vista de gestión de aplicaciones Almus"""
+        action = self.env.ref('almus_base.action_almus_app_config_simple').read()[0]
+        return action
     
     def action_almus_refresh_apps(self):
         """Refrescar la lista de aplicaciones Almus"""
@@ -60,10 +50,16 @@ class ResConfigSettings(models.TransientModel):
         """Exportar configuración actual de aplicaciones Almus"""
         self.ensure_one()
         
-        apps = self.almus_app_ids
+        current_company = self.env.company
+        apps = self.env['almus.app.config'].search([
+            ('active', '=', True),
+            '|',
+            ('company_ids', '=', False),
+            ('company_ids', 'in', [current_company.id])
+        ])
         
         config_data = {
-            'company': self.env.company.name,
+            'company': current_company.name,
             'date': fields.Datetime.now().isoformat(),
             'user': self.env.user.name,
             'apps': []

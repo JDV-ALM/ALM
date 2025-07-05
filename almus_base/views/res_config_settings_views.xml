@@ -35,11 +35,11 @@
                                         </div>
                                     </div>
                                     <div class="mt8">
-                                        <button name="action_almus_refresh_apps" 
+                                        <button name="action_almus_manage_apps" 
                                                 type="object" 
-                                                string="Actualizar Lista" 
-                                                class="btn-secondary"
-                                                icon="fa-refresh"/>
+                                                string="Gestionar Aplicaciones" 
+                                                class="btn-primary"
+                                                icon="fa-cogs"/>
                                         <button name="action_export_almus_config" 
                                                 type="object" 
                                                 string="Exportar Configuración" 
@@ -49,27 +49,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <h2 class="mt32">Aplicaciones Almus Disponibles</h2>
-                    
-                    <!-- Apps Management Section -->
-                    <field name="almus_app_ids" invisible="1"/>
-                    <div class="row mt16 o_settings_container">
-                        <div class="col-12">
-                            <p class="text-muted">
-                                <i class="fa fa-info-circle"/> Active o desactive las funcionalidades según sus necesidades.
-                            </p>
-                            <field name="almus_app_ids" widget="one2many" mode="tree">
-                                <list string="Aplicaciones" create="false" delete="false" editable="bottom">
-                                    <field name="sequence" widget="handle"/>
-                                    <field name="display_name" string="Aplicación" readonly="1"/>
-                                    <field name="is_enabled" string="Habilitado" widget="boolean_toggle"/>
-                                    <field name="category" string="Categoría" readonly="1"/>
-                                    <field name="description" string="Descripción" readonly="1" optional="show"/>
-                                </list>
-                            </field>
                         </div>
                     </div>
                     
