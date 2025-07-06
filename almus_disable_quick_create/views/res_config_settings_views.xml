@@ -6,66 +6,16 @@
         <field name="inherit_id" ref="almus_base.view_almus_base_res_config_settings"/>
         <field name="arch" type="xml">
             <xpath expr="//block[@name='almus_app_settings']" position="inside">
-                <block name="almus_disable_quick_create_block">
-                    <setting id="almus_disable_quick_create_settings" 
-                             string="Control de Creación Rápida"
-                             help="Controla la creación rápida de contactos y productos en ventas y compras">
-                        <h2 class="mt32 mb16">Control de Creación Rápida</h2>
-                        <div class="text-muted mb16">
-                            Evita la creación accidental de registros incompletos controlando las opciones de creación rápida en formularios
-                        </div>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12">
-                                <h3 class="o_light_label">Contactos (Clientes/Proveedores)</h3>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="almus_disable_partner_quick_create"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="almus_disable_partner_quick_create"/>
-                                    <div class="text-muted">
-                                        Desactiva la opción "Crear" en campos de contacto
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="almus_disable_partner_create_edit"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="almus_disable_partner_create_edit"/>
-                                    <div class="text-muted">
-                                        Desactiva la opción "Crear y editar" en campos de contacto
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 mt16">
-                                <h3 class="o_light_label">Productos</h3>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="almus_disable_product_quick_create"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="almus_disable_product_quick_create"/>
-                                    <div class="text-muted">
-                                        Desactiva la opción "Crear" en campos de producto
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="almus_disable_product_create_edit"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="almus_disable_product_create_edit"/>
-                                    <div class="text-muted">
-                                        Desactiva la opción "Crear y editar" en campos de producto
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <block title="Control de Creación Rápida" name="almus_disable_quick_create_block">
+                    <setting id="disable_partner_creation" 
+                             string="Contactos"
+                             help="Obliga a crear contactos solo desde el módulo de Contactos">
+                        <field name="almus_disable_partner_creation"/>
+                    </setting>
+                    <setting id="disable_product_creation" 
+                             string="Productos"
+                             help="Obliga a crear productos solo desde el módulo de Inventario">
+                        <field name="almus_disable_product_creation"/>
                     </setting>
                 </block>
             </xpath>

@@ -9,30 +9,18 @@ _logger = logging.getLogger(__name__)
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
     
-    # Configuraciones para Partners (Clientes/Proveedores)
-    almus_disable_partner_quick_create = fields.Boolean(
-        string='Desactivar "Crear" para Contactos',
-        help='Evita crear contactos rápidamente desde los formularios de ventas y compras',
-        config_parameter='almus_disable_quick_create.disable_partner_quick_create',
+    # Configuración simplificada para Partners
+    almus_disable_partner_creation = fields.Boolean(
+        string='Desactivar creación rápida de contactos',
+        help='Obliga a crear contactos solo desde el módulo de Contactos',
+        config_parameter='almus_disable_quick_create.disable_partner_creation',
     )
     
-    almus_disable_partner_create_edit = fields.Boolean(
-        string='Desactivar "Crear y editar" para Contactos',
-        help='Evita crear y editar contactos desde los formularios de ventas y compras',
-        config_parameter='almus_disable_quick_create.disable_partner_create_edit',
-    )
-    
-    # Configuraciones para Productos
-    almus_disable_product_quick_create = fields.Boolean(
-        string='Desactivar "Crear" para Productos',
-        help='Evita crear productos rápidamente desde los formularios de ventas y compras',
-        config_parameter='almus_disable_quick_create.disable_product_quick_create',
-    )
-    
-    almus_disable_product_create_edit = fields.Boolean(
-        string='Desactivar "Crear y editar" para Productos',
-        help='Evita crear y editar productos desde los formularios de ventas y compras',
-        config_parameter='almus_disable_quick_create.disable_product_create_edit',
+    # Configuración simplificada para Productos
+    almus_disable_product_creation = fields.Boolean(
+        string='Desactivar creación rápida de productos',
+        help='Obliga a crear productos solo desde el módulo de Inventario',
+        config_parameter='almus_disable_quick_create.disable_product_creation',
     )
     
     def set_values(self):
@@ -51,36 +39,22 @@ class SaleOrder(models.Model):
             ICP = self.env['ir.config_parameter'].sudo()
             
             # Obtener configuraciones
-            disable_partner_create = ICP.get_param('almus_disable_quick_create.disable_partner_quick_create', 'False') == 'True'
-            disable_partner_create_edit = ICP.get_param('almus_disable_quick_create.disable_partner_create_edit', 'False') == 'True'
-            disable_product_create = ICP.get_param('almus_disable_quick_create.disable_product_quick_create', 'False') == 'True'
-            disable_product_create_edit = ICP.get_param('almus_disable_quick_create.disable_product_create_edit', 'False') == 'True'
+            disable_partner = ICP.get_param('almus_disable_quick_create.disable_partner_creation', 'False') == 'True'
+            disable_product = ICP.get_param('almus_disable_quick_create.disable_product_creation', 'False') == 'True'
             
             # Aplicar opciones a campos en la vista
             from lxml import etree
             doc = etree.XML(res['arch'])
             
             # Campos de partner
-            for field in doc.xpath("//field[@name='partner_id'] | //field[@name='partner_invoice_id'] | //field[@name='partner_shipping_id']"):
-                options = {}
-                if disable_partner_create:
-                    options['no_create'] = True
-                    options['no_quick_create'] = True
-                if disable_partner_create_edit:
-                    options['no_create_edit'] = True
-                if options:
-                    field.set('options', str(options))
+            if disable_partner:
+                for field in doc.xpath("//field[@name='partner_id'] | //field[@name='partner_invoice_id'] | //field[@name='partner_shipping_id']"):
+                    field.set('options', "{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}")
             
             # Campos de producto en líneas
-            for field in doc.xpath("//field[@name='order_line']//field[@name='product_id'] | //field[@name='order_line']//field[@name='product_template_id']"):
-                options = {}
-                if disable_product_create:
-                    options['no_create'] = True
-                    options['no_quick_create'] = True
-                if disable_product_create_edit:
-                    options['no_create_edit'] = True
-                if options:
-                    field.set('options', str(options))
+            if disable_product:
+                for field in doc.xpath("//field[@name='order_line']//field[@name='product_id'] | //field[@name='order_line']//field[@name='product_template_id']"):
+                    field.set('options', "{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}")
             
             res['arch'] = etree.tostring(doc, encoding='unicode')
         
@@ -98,36 +72,22 @@ class PurchaseOrder(models.Model):
             ICP = self.env['ir.config_parameter'].sudo()
             
             # Obtener configuraciones
-            disable_partner_create = ICP.get_param('almus_disable_quick_create.disable_partner_quick_create', 'False') == 'True'
-            disable_partner_create_edit = ICP.get_param('almus_disable_quick_create.disable_partner_create_edit', 'False') == 'True'
-            disable_product_create = ICP.get_param('almus_disable_quick_create.disable_product_quick_create', 'False') == 'True'
-            disable_product_create_edit = ICP.get_param('almus_disable_quick_create.disable_product_create_edit', 'False') == 'True'
+            disable_partner = ICP.get_param('almus_disable_quick_create.disable_partner_creation', 'False') == 'True'
+            disable_product = ICP.get_param('almus_disable_quick_create.disable_product_creation', 'False') == 'True'
             
             # Aplicar opciones a campos en la vista
             from lxml import etree
             doc = etree.XML(res['arch'])
             
             # Campo de partner
-            for field in doc.xpath("//field[@name='partner_id']"):
-                options = {}
-                if disable_partner_create:
-                    options['no_create'] = True
-                    options['no_quick_create'] = True
-                if disable_partner_create_edit:
-                    options['no_create_edit'] = True
-                if options:
-                    field.set('options', str(options))
+            if disable_partner:
+                for field in doc.xpath("//field[@name='partner_id']"):
+                    field.set('options', "{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}")
             
             # Campos de producto en líneas
-            for field in doc.xpath("//field[@name='order_line']//field[@name='product_id']"):
-                options = {}
-                if disable_product_create:
-                    options['no_create'] = True
-                    options['no_quick_create'] = True
-                if disable_product_create_edit:
-                    options['no_create_edit'] = True
-                if options:
-                    field.set('options', str(options))
+            if disable_product:
+                for field in doc.xpath("//field[@name='order_line']//field[@name='product_id']"):
+                    field.set('options', "{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}")
             
             res['arch'] = etree.tostring(doc, encoding='unicode')
         
@@ -145,36 +105,22 @@ class AccountMove(models.Model):
             ICP = self.env['ir.config_parameter'].sudo()
             
             # Obtener configuraciones
-            disable_partner_create = ICP.get_param('almus_disable_quick_create.disable_partner_quick_create', 'False') == 'True'
-            disable_partner_create_edit = ICP.get_param('almus_disable_quick_create.disable_partner_create_edit', 'False') == 'True'
-            disable_product_create = ICP.get_param('almus_disable_quick_create.disable_product_quick_create', 'False') == 'True'
-            disable_product_create_edit = ICP.get_param('almus_disable_quick_create.disable_product_create_edit', 'False') == 'True'
+            disable_partner = ICP.get_param('almus_disable_quick_create.disable_partner_creation', 'False') == 'True'
+            disable_product = ICP.get_param('almus_disable_quick_create.disable_product_creation', 'False') == 'True'
             
             # Aplicar opciones a campos en la vista
             from lxml import etree
             doc = etree.XML(res['arch'])
             
             # Campos de partner
-            for field in doc.xpath("//field[@name='partner_id'] | //field[@name='partner_shipping_id']"):
-                options = {}
-                if disable_partner_create:
-                    options['no_create'] = True
-                    options['no_quick_create'] = True
-                if disable_partner_create_edit:
-                    options['no_create_edit'] = True
-                if options:
-                    field.set('options', str(options))
+            if disable_partner:
+                for field in doc.xpath("//field[@name='partner_id'] | //field[@name='partner_shipping_id']"):
+                    field.set('options', "{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}")
             
             # Campos de producto en líneas
-            for field in doc.xpath("//field[@name='invoice_line_ids']//field[@name='product_id']"):
-                options = {}
-                if disable_product_create:
-                    options['no_create'] = True
-                    options['no_quick_create'] = True
-                if disable_product_create_edit:
-                    options['no_create_edit'] = True
-                if options:
-                    field.set('options', str(options))
+            if disable_product:
+                for field in doc.xpath("//field[@name='invoice_line_ids']//field[@name='product_id']"):
+                    field.set('options', "{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}")
             
             res['arch'] = etree.tostring(doc, encoding='unicode')
         
