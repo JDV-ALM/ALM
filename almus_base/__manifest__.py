@@ -1,4 +1,4 @@
- {
+{
     "name": "Almus Base",
     "summary": """
         Panel de control para aplicaciones Almus Dev
