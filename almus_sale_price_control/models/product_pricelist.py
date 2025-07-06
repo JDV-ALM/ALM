@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
-from odoo.exceptions import AccessError
+from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 import logging
 
@@ -17,36 +17,57 @@ class ProductPricelist(models.Model):
         return safe_eval(ICP.get_param('almus_sale_price_control.enabled', 'True'))
     
     @api.model
-    def check_access_rights(self, operation, raise_exception=True):
-        """Override para controlar acceso a listas de precios"""
-        result = super().check_access_rights(operation, raise_exception=False)
-        
+    def _check_write_access(self):
+        """Verifica si el usuario puede escribir en listas de precios"""
         if not self._is_price_control_enabled():
-            return result or super().check_access_rights(operation, raise_exception=raise_exception)
-        
+            return True
+            
         ICP = self.env['ir.config_parameter'].sudo()
         restrict_access = safe_eval(ICP.get_param('almus_sale_price_control.restrict_pricelist_access', 'True'))
         
-        if restrict_access and operation in ['write', 'create', 'unlink']:
-            if not self.env.user.has_group('sales_team.group_sale_manager'):
-                if raise_exception:
-                    raise AccessError('Solo los administradores pueden %s listas de precios.' % operation)
-                return False
-        
-        return result or super().check_access_rights(operation, raise_exception=raise_exception)
+        if restrict_access and not self.env.user.has_group('sales_team.group_sale_manager'):
+            return False
+        return True
     
     def write(self, vals):
         """Override write para verificar permisos"""
-        self.check_access_rights('write')
+        if not self._check_write_access():
+            raise UserError('Solo los administradores pueden modificar listas de precios.')
         return super().write(vals)
     
     @api.model_create_multi
     def create(self, vals_list):
         """Override create para verificar permisos"""
-        self.check_access_rights('create')
+        if not self._check_write_access():
+            raise UserError('Solo los administradores pueden crear listas de precios.')
         return super().create(vals_list)
     
     def unlink(self):
         """Override unlink para verificar permisos"""
-        self.check_access_rights('unlink')
+        if not self._check_write_access():
+            raise UserError('Solo los administradores pueden eliminar listas de precios.')
+        return super().unlink()
+
+
+class ProductPricelistItem(models.Model):
+    _inherit = 'product.pricelist.item'
+    
+    def write(self, vals):
+        """Override write para verificar permisos"""
+        if not self.pricelist_id._check_write_access():
+            raise UserError('Solo los administradores pueden modificar elementos de listas de precios.')
+        return super().write(vals)
+    
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Override create para verificar permisos"""
+        # Verificar acceso usando el método del modelo padre
+        if not self.env['product.pricelist']._check_write_access():
+            raise UserError('Solo los administradores pueden crear elementos de listas de precios.')
+        return super().create(vals_list)
+    
+    def unlink(self):
+        """Override unlink para verificar permisos"""
+        if not self.pricelist_id._check_write_access():
+            raise UserError('Solo los administradores pueden eliminar elementos de listas de precios.')
         return super().unlink()

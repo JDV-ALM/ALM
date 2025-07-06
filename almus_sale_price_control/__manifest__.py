@@ -16,7 +16,6 @@
     'depends': ['almus_base', 'sale', 'product'],
     'data': [
         'security/sale_security.xml',
-        'security/ir.model.access.csv',
         'views/res_config_settings_views.xml',
         'views/sale_order_views.xml',
         'views/product_pricelist_views.xml',
