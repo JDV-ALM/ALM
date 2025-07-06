@@ -21,35 +21,23 @@
                        groups="base.group_user"/>
             </xpath>
             
-            <!-- Hacer el campo price_unit readonly condicionalmente usando un campo computado -->
+            <!-- Agregar campo computado para controlar readonly -->
+            <xpath expr="//field[@name='order_line']/form//group" position="inside">
+                <field name="price_unit_readonly" invisible="1"/>
+            </xpath>
+            
+            <xpath expr="//field[@name='order_line']/list" position="inside">
+                <field name="price_unit_readonly" column_invisible="1"/>
+            </xpath>
+            
+            <!-- Hacer el campo price_unit readonly condicionalmente -->
             <xpath expr="//field[@name='order_line']/list//field[@name='price_unit']" position="attributes">
-                <attribute name="readonly">context.get('almus_restrict_price_edit', False) and not context.get('is_sale_manager', False)</attribute>
+                <attribute name="readonly">price_unit_readonly</attribute>
             </xpath>
             
             <xpath expr="//field[@name='order_line']/form//field[@name='price_unit']" position="attributes">
-                <attribute name="readonly">context.get('almus_restrict_price_edit', False) and not context.get('is_sale_manager', False)</attribute>
+                <attribute name="readonly">price_unit_readonly</attribute>
             </xpath>
         </field>
-    </record>
-    
-    <!-- Vista para actualizar el contexto con las restricciones -->
-    <record id="action_almus_sale_order_inherit" model="ir.actions.act_window">
-        <field name="name">Quotations</field>
-        <field name="res_model">sale.order</field>
-        <field name="inherit_id" ref="sale.action_quotations"/>
-        <field name="context">{
-            'almus_restrict_price_edit': True,
-            'is_sale_manager': user.has_group('sales_team.group_sale_manager')
-        }</field>
-    </record>
-    
-    <record id="action_almus_sale_order_all_inherit" model="ir.actions.act_window">
-        <field name="name">Sales Orders</field>
-        <field name="res_model">sale.order</field>
-        <field name="inherit_id" ref="sale.action_orders"/>
-        <field name="context">{
-            'almus_restrict_price_edit': True,
-            'is_sale_manager': user.has_group('sales_team.group_sale_manager')
-        }</field>
     </record>
 </odoo>

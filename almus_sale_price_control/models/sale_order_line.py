@@ -16,6 +16,18 @@ class SaleOrderLine(models.Model):
         help='Lista de precios específica para esta línea'
     )
     
+    price_unit_readonly = fields.Boolean(
+        compute='_compute_price_unit_readonly',
+        string='Price Unit Readonly'
+    )
+    
+    @api.depends_context('uid')
+    def _compute_price_unit_readonly(self):
+        """Calcula si el campo price_unit debe ser readonly"""
+        can_edit = self._can_edit_price()
+        for line in self:
+            line.price_unit_readonly = not can_edit
+    
     @api.model
     def _is_price_control_enabled(self):
         """Verifica si el control de precios está habilitado"""
