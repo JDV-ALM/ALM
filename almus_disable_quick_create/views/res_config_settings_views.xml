@@ -9,34 +9,49 @@
                 <setting id="almus_disable_quick_create_settings" 
                          string="Control de Creación Rápida"
                          help="Controla la creación rápida de contactos y productos en ventas y compras">
-                    <div class="content-group">
-                        <div class="mt-2">
-                            <h4>Configuración de Contactos</h4>
-                            <div class="row mt-3">
-                                <label for="almus_disable_partner_quick_create" class="col-lg-6 o_light_label"/>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
                                 <field name="almus_disable_partner_quick_create"/>
                             </div>
-                            <div class="row mt-2">
-                                <label for="almus_disable_partner_create_edit" class="col-lg-6 o_light_label"/>
-                                <field name="almus_disable_partner_create_edit"/>
-                            </div>
-                            <div class="text-muted mt-2">
-                                <i class="fa fa-info-circle"/> Obliga a crear contactos desde el menú de Contactos
+                            <div class="o_setting_right_pane">
+                                <label for="almus_disable_partner_quick_create"/>
+                                <div class="text-muted">
+                                    Desactiva la opción "Crear" en campos de contacto
+                                </div>
                             </div>
                         </div>
-                        
-                        <div class="mt-4">
-                            <h4>Configuración de Productos</h4>
-                            <div class="row mt-3">
-                                <label for="almus_disable_product_quick_create" class="col-lg-6 o_light_label"/>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="almus_disable_partner_create_edit"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="almus_disable_partner_create_edit"/>
+                                <div class="text-muted">
+                                    Desactiva la opción "Crear y editar" en campos de contacto
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
                                 <field name="almus_disable_product_quick_create"/>
                             </div>
-                            <div class="row mt-2">
-                                <label for="almus_disable_product_create_edit" class="col-lg-6 o_light_label"/>
+                            <div class="o_setting_right_pane">
+                                <label for="almus_disable_product_quick_create"/>
+                                <div class="text-muted">
+                                    Desactiva la opción "Crear" en campos de producto
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
                                 <field name="almus_disable_product_create_edit"/>
                             </div>
-                            <div class="text-muted mt-2">
-                                <i class="fa fa-info-circle"/> Obliga a crear productos desde el menú de Productos
+                            <div class="o_setting_right_pane">
+                                <label for="almus_disable_product_create_edit"/>
+                                <div class="text-muted">
+                                    Desactiva la opción "Crear y editar" en campos de producto
+                                </div>
                             </div>
                         </div>
                     </div>
