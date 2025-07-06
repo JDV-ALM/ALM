@@ -1,13 +1,13 @@
-{
+ {
     "name": "Almus Base",
     "summary": """
-        Módulo base para la gestión centralizada de aplicaciones Almus Dev
+        Panel de control para aplicaciones Almus Dev
     """,
     "description": """
-        Este módulo proporciona:
-        - Gestión centralizada de aplicaciones Almus
-        - Panel de configuración unificado
-        - Sistema de activación/desactivación de funcionalidades
+        Módulo base que proporciona:
+        - Panel informativo de aplicaciones Almus instaladas
+        - Espacio en configuración para que otras apps Almus agreguen sus ajustes
+        - Estadísticas básicas del ecosistema Almus
     """,
     "license": "LGPL-3",
     "author": "Almus Dev",
@@ -17,10 +17,8 @@
     "depends": ["base"],
     "installable": True,
     "auto_install": False,
-    "application": False,  # No debe ser aplicación si solo aparece en configuración
+    "application": False,
     "data": [
-        "security/ir.model.access.csv",
-        "views/almus_app_config_views.xml",
         "views/res_config_settings_views.xml",
     ],
 }

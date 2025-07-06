@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+ <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_almus_base_res_config_settings" model="ir.ui.view">
         <field name="name">almus.base.res.config.settings.form</field>
@@ -11,49 +11,77 @@
                         <div class="col-12 o_setting_box">
                             <div class="o_setting_right_pane">
                                 <div class="content-group">
-                                    <h2>Panel de Control Almus</h2>
+                                    <h2>Aplicaciones Almus Dev</h2>
+                                    
+                                    <!-- Panel Informativo -->
                                     <div class="row mt16">
-                                        <div class="col-md-6">
-                                            <div class="alert alert-info" role="alert">
-                                                <h4 class="alert-heading">
-                                                    <i class="fa fa-cube"/> Aplicaciones Instaladas
-                                                </h4>
-                                                <p class="mb-0">
-                                                    <strong><field name="almus_total_apps" class="oe_inline"/> aplicaciones</strong> disponibles
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="alert alert-success" role="alert">
-                                                <h4 class="alert-heading">
-                                                    <i class="fa fa-check-circle"/> Aplicaciones Activas
-                                                </h4>
-                                                <p class="mb-0">
-                                                    <strong><field name="almus_enabled_apps" class="oe_inline"/> aplicaciones</strong> habilitadas
-                                                </p>
+                                        <div class="col-12">
+                                            <div class="alert alert-info d-flex align-items-center" role="alert">
+                                                <div class="me-3">
+                                                    <i class="fa fa-3x fa-cube text-info"/>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <h4 class="alert-heading mb-1">
+                                                        Ecosistema Almus
+                                                    </h4>
+                                                    <p class="mb-0">
+                                                        Tienes <strong><field name="almus_installed_apps" class="oe_inline"/></strong> 
+                                                        aplicación(es) Almus instalada(s) en tu sistema.
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="mt8">
-                                        <button name="action_almus_manage_apps" 
-                                                type="object" 
-                                                string="Gestionar Aplicaciones" 
-                                                class="btn-primary"
-                                                icon="fa-cogs"/>
-                                        <button name="action_export_almus_config" 
-                                                type="object" 
-                                                string="Exportar Configuración" 
-                                                class="btn-secondary ms-2"
-                                                icon="fa-download"
-                                                groups="base.group_system"/>
+                                    
+                                    <!-- Lista de Aplicaciones -->
+                                    <div class="row mt8" invisible="almus_installed_apps == 0">
+                                        <div class="col-12">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5 class="mb-0">
+                                                        <i class="fa fa-list"/> Aplicaciones Instaladas
+                                                    </h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <field name="almus_app_list" readonly="1" class="mb-0" style="white-space: pre-line;"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Información adicional -->
+                                    <div class="mt16 text-muted">
+                                        <p>
+                                            <i class="fa fa-info-circle"/> 
+                                            Las aplicaciones Almus extienden las funcionalidades de Odoo. 
+                                            Cada aplicación puede tener sus propias configuraciones que aparecerán en esta sección.
+                                        </p>
+                                        <p class="mb-0">
+                                            <i class="fa fa-globe"/> 
+                                            Desarrollado por <a href="https://www.almus.dev" target="_blank">Almus Dev</a>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <block name="almus_base_settings">
-                        <!-- Aquí otros módulos pueden agregar sus configuraciones específicas -->
+                    <!-- Separador visual -->
+                    <div class="row mt32 mb16" invisible="almus_installed_apps == 0">
+                        <div class="col-12">
+                            <hr style="border-top: 2px solid #dee2e6;"/>
+                            <h3 class="text-center text-muted">
+                                <i class="fa fa-cogs"/> Configuración de Aplicaciones
+                            </h3>
+                        </div>
+                    </div>
+                    
+                    <!-- Bloque donde otras apps pueden agregar sus configuraciones -->
+                    <block name="almus_app_settings">
+                        <!-- 
+                        Aquí cada aplicación Almus puede agregar sus propias configuraciones
+                        usando xpath para insertar dentro de este bloque
+                        -->
                     </block>
                 </app>
             </xpath>
