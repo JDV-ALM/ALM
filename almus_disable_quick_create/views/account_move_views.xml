@@ -27,22 +27,22 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <!-- Tree view -->
-            <xpath expr="//page[@id='invoice_tab']//field[@name='invoice_line_ids']//tree//field[@name='product_id']" position="attributes">
+            <!-- List view (Odoo 18 usa list en lugar de tree) -->
+            <xpath expr="//field[@name='invoice_line_ids']/list//field[@name='product_id']" position="attributes">
                 <attribute name="options">{ 
                     'no_create': context.get('almus_disable_product_quick_create', False), 
                     'no_create_edit': context.get('almus_disable_product_create_edit', False)
                 }</attribute>
             </xpath>
             <!-- Kanban view -->
-            <xpath expr="//page[@id='invoice_tab']//field[@name='invoice_line_ids']//kanban//field[@name='product_id']" position="attributes">
+            <xpath expr="//field[@name='invoice_line_ids']/kanban//field[@name='product_id']" position="attributes">
                 <attribute name="options">{ 
                     'no_create': context.get('almus_disable_product_quick_create', False), 
                     'no_create_edit': context.get('almus_disable_product_create_edit', False)
                 }</attribute>
             </xpath>
             <!-- Form view -->
-            <xpath expr="//page[@id='invoice_tab']//field[@name='invoice_line_ids']//form//field[@name='product_id']" position="attributes">
+            <xpath expr="//field[@name='invoice_line_ids']/form//field[@name='product_id']" position="attributes">
                 <attribute name="options">{ 
                     'no_create': context.get('almus_disable_product_quick_create', False), 
                     'no_create_edit': context.get('almus_disable_product_create_edit', False)
