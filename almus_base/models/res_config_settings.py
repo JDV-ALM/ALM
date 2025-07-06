@@ -17,7 +17,6 @@ class ResConfigSettings(models.TransientModel):
         help='Lista de aplicaciones Almus instaladas'
     )
     
-    @api.depends('company_id')  # Trigger recompute when form loads
     def _compute_almus_stats(self):
         """Calcular estadísticas de aplicaciones Almus instaladas"""
         for settings in self:
