@@ -1,49 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Ocultar el menú de listas de precios para usuarios no administradores -->
-    <record id="menu_product_pricelist_inherit" model="ir.ui.menu">
-        <field name="name">Pricelists</field>
-        <field name="inherit_id" ref="product.menu_product_pricelist_main"/>
-        <field name="groups_id" eval="[(6, 0, [ref('sales_team.group_sale_manager')])]"/>
-    </record>
-    
-    <!-- Modificar la acción existente para agregar grupos -->
-    <record id="product.product_pricelist_action2" model="ir.actions.act_window">
-        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
-    </record>
-    
-    <!-- Vista de lista para mostrar solo lectura a usuarios no administradores -->
-    <record id="view_almus_product_pricelist_list" model="ir.ui.view">
-        <field name="name">almus.product.pricelist.list</field>
+    <!-- Vista de lista con restricciones -->
+    <record id="view_almus_product_pricelist_list_restricted" model="ir.ui.view">
+        <field name="name">almus.product.pricelist.list.restricted</field>
         <field name="model">product.pricelist</field>
         <field name="inherit_id" ref="product.product_pricelist_view_list"/>
+        <field name="priority">20</field>
         <field name="arch" type="xml">
             <xpath expr="//list" position="attributes">
-                <attribute name="create">false</attribute>
-                <attribute name="delete">false</attribute>
-                <attribute name="edit">false</attribute>
+                <attribute name="create">0</attribute>
+                <attribute name="delete">0</attribute>
+                <attribute name="edit">0</attribute>
             </xpath>
         </field>
-        <field name="groups_id" eval="[(6, 0, [])]"/>
     </record>
     
-    <!-- Vista de formulario solo lectura para no administradores -->
-    <record id="view_almus_product_pricelist_form_readonly" model="ir.ui.view">
-        <field name="name">almus.product.pricelist.form.readonly</field>
+    <!-- Vista de formulario con restricciones -->
+    <record id="view_almus_product_pricelist_form_restricted" model="ir.ui.view">
+        <field name="name">almus.product.pricelist.form.restricted</field>
         <field name="model">product.pricelist</field>
         <field name="inherit_id" ref="product.product_pricelist_view"/>
-        <field name="mode">primary</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <xpath expr="//form" position="attributes">
-                <attribute name="create">false</attribute>
-                <attribute name="delete">false</attribute>
-                <attribute name="edit">false</attribute>
+                <attribute name="create">0</attribute>
+                <attribute name="delete">0</attribute>
+                <attribute name="edit">0</attribute>
             </xpath>
-            <xpath expr="//field" position="attributes">
-                <attribute name="readonly">1</attribute>
+            <xpath expr="//header" position="attributes">
+                <attribute name="invisible">not env.user.has_group('sales_team.group_sale_manager')</attribute>
             </xpath>
         </field>
-        <field name="groups_id" eval="[(6, 0, [])]"/>
     </record>
 </odoo>
