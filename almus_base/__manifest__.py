@@ -20,7 +20,6 @@
     "application": False,
     "data": [
         "security/ir.model.access.csv",
-        "data/ir_cron.xml",
         "views/res_config_settings_views.xml",
     ],
 }
