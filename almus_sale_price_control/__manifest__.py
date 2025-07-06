@@ -18,7 +18,6 @@
         'security/sale_security.xml',
         'views/res_config_settings_views.xml',
         'views/sale_order_views.xml',
-        'views/product_pricelist_views.xml',
     ],
     'installable': True,
     'application': True,
