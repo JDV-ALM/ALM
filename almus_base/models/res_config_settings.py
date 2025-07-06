@@ -19,31 +19,26 @@ class ResConfigSettings(models.TransientModel):
     
     def _compute_almus_stats(self):
         """Calcular estadísticas de aplicaciones Almus instaladas"""
+        AlmusRegistry = self.env['almus.app.registry']
+        
+        # Sincronizar registro si está vacío o desactualizado
+        if not AlmusRegistry.search_count([]) or self._context.get('force_almus_sync'):
+            AlmusRegistry.sync_almus_apps()
+        
         for settings in self:
-            # Buscar módulos instalados con prefijo almus_ o autor Almus Dev
-            domain = [
-                ('state', '=', 'installed'),
-                '|', '|',
-                ('name', '=like', 'almus_%'),
-                ('name', '=like', 'l10n_ve_almus_%'),
-                ('author', 'ilike', 'Almus Dev')
-            ]
-            
-            # Excluir almus_base del conteo
-            domain.append(('name', '!=', 'almus_base'))
-            
-            almus_modules = self.env['ir.module.module'].search(domain)
-            
-            settings.almus_installed_apps = len(almus_modules)
-            
-            # Crear lista formateada de aplicaciones
-            if almus_modules:
-                app_names = []
-                for module in almus_modules.sorted('name'):
-                    # Formatear nombre para mostrar
-                    display_name = module.shortdesc or module.name
-                    app_names.append(f"• {display_name}")
-                
-                settings.almus_app_list = '\n'.join(app_names)
-            else:
-                settings.almus_app_list = _('No hay aplicaciones Almus instaladas')
+            # Usar el registro persistente
+            settings.almus_installed_apps = AlmusRegistry.get_installed_count()
+            settings.almus_app_list = AlmusRegistry.get_installed_list()
+    
+    def action_refresh_almus_apps(self):
+        """Refrescar manualmente el registro de apps Almus"""
+        self.env['almus.app.registry'].sync_almus_apps()
+        
+        # Recargar la vista con el registro actualizado
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.config.settings',
+            'view_mode': 'form',
+            'target': 'inline',
+            'context': {'force_almus_sync': True},
+        }
