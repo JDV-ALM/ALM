@@ -26,10 +26,12 @@
     'data': [
         'security/ir.model.access.csv',
         'views/res_config_settings_views.xml',
-        'views/sale_order_views.xml',
-        'views/purchase_order_views.xml',
-        'views/account_move_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'almus_disable_quick_create/static/src/js/disable_quick_create.js',
+        ],
+    },
     'application': True,
     'auto_install': False,
     'installable': True,

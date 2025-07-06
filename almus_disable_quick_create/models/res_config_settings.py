@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -34,32 +34,6 @@ class ResConfigSettings(models.TransientModel):
         help='Evita crear y editar productos desde los formularios de ventas y compras',
         config_parameter='almus_disable_quick_create.disable_product_create_edit',
     )
-    
-    @api.model
-    def get_values(self):
-        res = super(ResConfigSettings, self).get_values()
-        params = self.env['ir.config_parameter'].sudo()
-        
-        res.update({
-            'almus_disable_partner_quick_create': params.get_param(
-                'almus_disable_quick_create.disable_partner_quick_create', 
-                default=False
-            ),
-            'almus_disable_partner_create_edit': params.get_param(
-                'almus_disable_quick_create.disable_partner_create_edit', 
-                default=False
-            ),
-            'almus_disable_product_quick_create': params.get_param(
-                'almus_disable_quick_create.disable_product_quick_create', 
-                default=False
-            ),
-            'almus_disable_product_create_edit': params.get_param(
-                'almus_disable_quick_create.disable_product_create_edit', 
-                default=False
-            ),
-        })
-        
-        return res
     
     def set_values(self):
         super(ResConfigSettings, self).set_values()
