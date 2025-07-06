@@ -21,23 +21,17 @@ class ResConfigSettings(models.TransientModel):
         """Calcular estadísticas de aplicaciones Almus instaladas"""
         AlmusRegistry = self.env['almus.app.registry']
         
-        # Sincronizar registro si está vacío o desactualizado
-        if not AlmusRegistry.search_count([]) or self._context.get('force_almus_sync'):
-            AlmusRegistry.sync_almus_apps()
-        
         for settings in self:
-            # Usar el registro persistente
+            # Siempre usar el registro persistente
             settings.almus_installed_apps = AlmusRegistry.get_installed_count()
             settings.almus_app_list = AlmusRegistry.get_installed_list()
     
     def action_refresh_almus_apps(self):
         """Refrescar manualmente el registro de apps Almus"""
+        # Sincronizar el registro
         self.env['almus.app.registry'].sync_almus_apps()
         
-        # Forzar el recálculo de los campos
-        self._compute_almus_stats()
-        
-        # Mostrar notificación sin recargar la vista
+        # Mostrar notificación sin recargar
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -46,6 +40,5 @@ class ResConfigSettings(models.TransientModel):
                 'message': _('El registro de aplicaciones Almus ha sido actualizado.'),
                 'type': 'success',
                 'sticky': False,
-                'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
             }
         }

@@ -110,19 +110,18 @@ class AlmusAppRegistry(models.Model):
         orphan_apps = self.search([('module_id', '=', False)])
         if orphan_apps:
             orphan_apps.unlink()
-        
-        # Asegurar que se guarden los cambios
-        self.env.cr.commit()
             
         return True
     
     @api.model
     def get_installed_count(self):
         """Obtener cantidad de apps instaladas"""
-        return self.search_count([
+        count = self.search_count([
             ('active', '=', True),
             ('state', '=', 'installed')
         ])
+        _logger.info('Apps Almus instaladas: %s', count)
+        return count
     
     @api.model
     def get_installed_list(self):
