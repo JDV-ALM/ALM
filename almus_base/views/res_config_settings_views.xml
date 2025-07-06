@@ -41,8 +41,18 @@
                         </div>
                     </block>
                     
+                    <!-- Título para configuraciones (solo visible si hay apps) -->
+                    <div class="row mt32 mb16" invisible="almus_installed_apps == 0">
+                        <div class="col-12">
+                            <h4 class="text-muted">
+                                <i class="fa fa-cogs"/> Configuración de Aplicaciones
+                            </h4>
+                            <hr/>
+                        </div>
+                    </div>
+                    
                     <!-- Bloque donde otras apps pueden agregar sus configuraciones -->
-                    <block name="almus_app_settings" invisible="almus_installed_apps == 0">
+                    <block name="almus_app_settings">
                         <!-- 
                         Aquí cada aplicación Almus puede agregar sus propias configuraciones
                         usando xpath para insertar dentro de este bloque
