@@ -11,7 +11,12 @@
                         <div class="col-12 o_setting_box">
                             <div class="o_setting_right_pane">
                                 <div class="content-group">
-                                    <h2>Aplicaciones Almus Dev</h2>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <img src="/almus_base/static/description/icon.png" 
+                                             alt="Almus Dev" 
+                                             style="width: 48px; height: 48px; margin-right: 16px;"/>
+                                        <h2 class="mb-0">Aplicaciones Almus Dev</h2>
+                                    </div>
                                     
                                     <!-- Panel Informativo -->
                                     <div class="row mt16">
