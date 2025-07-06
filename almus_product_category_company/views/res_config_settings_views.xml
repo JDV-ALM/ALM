@@ -6,21 +6,23 @@
         <field name="inherit_id" ref="almus_base.view_almus_base_res_config_settings"/>
         <field name="arch" type="xml">
             <xpath expr="//block[@name='almus_app_settings']" position="inside">
-                <setting id="almus_product_category_company_settings" 
-                         string="Categorías de Producto por Empresa"
-                         help="Restringe las categorías de producto por empresa, evitando que se compartan entre todas las compañías">
-                    <field name="almus_product_category_company_enabled"/>
-                    <div class="content-group" invisible="not almus_product_category_company_enabled">
-                        <div class="alert alert-info" role="alert">
-                            <i class="fa fa-info-circle"/> Cuando está activado:
-                            <ul class="mb-0">
-                                <li>Cada categoría pertenecerá a una empresa específica</li>
-                                <li>Los usuarios solo verán las categorías de su empresa actual</li>
-                                <li>Las categorías sin empresa serán visibles para todas las empresas</li>
-                            </ul>
+                <block title="Categorías de Producto" name="almus_product_category_company_block">
+                    <setting id="almus_product_category_company_settings" 
+                             string="Restringir por Empresa"
+                             help="Restringe las categorías de producto por empresa, evitando que se compartan entre todas las compañías">
+                        <field name="almus_product_category_company_enabled"/>
+                        <div class="content-group" invisible="not almus_product_category_company_enabled">
+                            <div class="alert alert-info" role="alert">
+                                <i class="fa fa-info-circle"/> Cuando está activado:
+                                <ul class="mb-0">
+                                    <li>Cada categoría pertenecerá a una empresa específica</li>
+                                    <li>Los usuarios solo verán las categorías de su empresa actual</li>
+                                    <li>Las categorías sin empresa serán visibles para todas las empresas</li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                </setting>
+                    </setting>
+                </block>
             </xpath>
         </field>
     </record>
