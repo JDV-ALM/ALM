@@ -27,11 +27,6 @@
         'security/ir.model.access.csv',
         'views/res_config_settings_views.xml',
     ],
-    'assets': {
-        'web.assets_backend': [
-            'almus_disable_quick_create/static/src/js/disable_quick_create.js',
-        ],
-    },
     'application': True,
     'auto_install': False,
     'installable': True,
