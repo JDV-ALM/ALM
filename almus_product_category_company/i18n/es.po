@@ -1,4 +1,4 @@
- # Translation of Odoo Module.
+# Translation of Odoo Module.
 # This file contains the translation of the following modules:
 # 	* almus_product_category_company
 #
@@ -33,11 +33,6 @@ msgid "The parent category must belong to the same company."
 msgstr "La categoría padre debe pertenecer a la misma empresa."
 
 #. module: almus_product_category_company
-#: model:ir.actions.act_window,name:almus_product_category_company.product_category_action
-msgid "Product Categories"
-msgstr "Categorías de Producto"
-
-#. module: almus_product_category_company
 #: model_terms:ir.ui.view,arch_db:almus_product_category_company.product_category_search_view_inherit
 msgid "My Company"
 msgstr "Mi Empresa"
@@ -53,24 +48,54 @@ msgid "Group By"
 msgstr "Agrupar Por"
 
 #. module: almus_product_category_company
+#: model:ir.model.fields,field_description:almus_product_category_company.field_res_config_settings__almus_product_category_company_enabled
+msgid "Product Categories per Company"
+msgstr "Categorías de Producto por Empresa"
+
+#. module: almus_product_category_company
+#: model:ir.model.fields,help:almus_product_category_company.field_res_config_settings__almus_product_category_company_enabled
+msgid "When enabled, product categories will be company-specific"
+msgstr "Cuando está activado, las categorías de producto serán específicas por empresa"
+
+#. module: almus_product_category_company
+#: model_terms:ir.ui.view,arch_db:almus_product_category_company.view_almus_product_category_company_res_config_settings
+msgid "Product Categories per Company"
+msgstr "Categorías de Producto por Empresa"
+
+#. module: almus_product_category_company
+#: model_terms:ir.ui.view,arch_db:almus_product_category_company.view_almus_product_category_company_res_config_settings
+msgid "Restricts product categories by company, preventing them from being shared across all companies"
+msgstr "Restringe las categorías de producto por empresa, evitando que se compartan entre todas las compañías"
+
+#. module: almus_product_category_company
+#: model_terms:ir.ui.view,arch_db:almus_product_category_company.view_almus_product_category_company_res_config_settings
+msgid "When enabled:"
+msgstr "Cuando está activado:"
+
+#. module: almus_product_category_company
+#: model_terms:ir.ui.view,arch_db:almus_product_category_company.view_almus_product_category_company_res_config_settings
+msgid "Each category will belong to a specific company"
+msgstr "Cada categoría pertenecerá a una empresa específica"
+
+#. module: almus_product_category_company
+#: model_terms:ir.ui.view,arch_db:almus_product_category_company.view_almus_product_category_company_res_config_settings
+msgid "Users will only see categories from their current company"
+msgstr "Los usuarios solo verán las categorías de su empresa actual"
+
+#. module: almus_product_category_company
+#: model_terms:ir.ui.view,arch_db:almus_product_category_company.view_almus_product_category_company_res_config_settings
+msgid "Categories without a company will be visible to all companies"
+msgstr "Las categorías sin empresa serán visibles para todas las empresas"
+
+#. module: almus_product_category_company
 #: model:ir.model,name:almus_product_category_company.model_product_category
 msgid "Product Category"
 msgstr "Categoría de Producto"
 
 #. module: almus_product_category_company
-#: model:ir.model,name:almus_product_category_company.model_almus_feature_mixin
-msgid "Mixin para verificar features Almus"
-msgstr "Mixin para verificar características Almus"
-
-#. module: almus_product_category_company
-#: model:ir.model.fields,field_description:almus_product_category_company.field_almus_feature_mixin__display_name
-msgid "Display Name"
-msgstr "Nombre a Mostrar"
-
-#. module: almus_product_category_company
-#: model:ir.model.fields,field_description:almus_product_category_company.field_almus_feature_mixin__id
-msgid "ID"
-msgstr "ID"
+#: model:ir.model,name:almus_product_category_company.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de Configuración"
 
 #. module: almus_product_category_company
 #: model:ir.rule,name:almus_product_category_company.product_category_company_rule

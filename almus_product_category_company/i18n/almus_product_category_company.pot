@@ -1,4 +1,4 @@
- # Translation of Odoo Module.
+# Translation of Odoo Module.
 # This file contains the translation of the following modules:
 # 	* almus_product_category_company
 #
@@ -31,11 +31,6 @@ msgid "The parent category must belong to the same company."
 msgstr ""
 
 #. module: almus_product_category_company
-#: model:ir.actions.act_window,name:almus_product_category_company.product_category_action
-msgid "Product Categories"
-msgstr ""
-
-#. module: almus_product_category_company
 #: model_terms:ir.ui.view,arch_db:almus_product_category_company.product_category_search_view_inherit
 msgid "My Company"
 msgstr ""
@@ -51,23 +46,53 @@ msgid "Group By"
 msgstr ""
 
 #. module: almus_product_category_company
+#: model:ir.model.fields,field_description:almus_product_category_company.field_res_config_settings__almus_product_category_company_enabled
+msgid "Product Categories per Company"
+msgstr ""
+
+#. module: almus_product_category_company
+#: model:ir.model.fields,help:almus_product_category_company.field_res_config_settings__almus_product_category_company_enabled
+msgid "When enabled, product categories will be company-specific"
+msgstr ""
+
+#. module: almus_product_category_company
+#: model_terms:ir.ui.view,arch_db:almus_product_category_company.view_almus_product_category_company_res_config_settings
+msgid "Product Categories per Company"
+msgstr ""
+
+#. module: almus_product_category_company
+#: model_terms:ir.ui.view,arch_db:almus_product_category_company.view_almus_product_category_company_res_config_settings
+msgid "Restricts product categories by company, preventing them from being shared across all companies"
+msgstr ""
+
+#. module: almus_product_category_company
+#: model_terms:ir.ui.view,arch_db:almus_product_category_company.view_almus_product_category_company_res_config_settings
+msgid "When enabled:"
+msgstr ""
+
+#. module: almus_product_category_company
+#: model_terms:ir.ui.view,arch_db:almus_product_category_company.view_almus_product_category_company_res_config_settings
+msgid "Each category will belong to a specific company"
+msgstr ""
+
+#. module: almus_product_category_company
+#: model_terms:ir.ui.view,arch_db:almus_product_category_company.view_almus_product_category_company_res_config_settings
+msgid "Users will only see categories from their current company"
+msgstr ""
+
+#. module: almus_product_category_company
+#: model_terms:ir.ui.view,arch_db:almus_product_category_company.view_almus_product_category_company_res_config_settings
+msgid "Categories without a company will be visible to all companies"
+msgstr ""
+
+#. module: almus_product_category_company
 #: model:ir.model,name:almus_product_category_company.model_product_category
 msgid "Product Category"
 msgstr ""
 
 #. module: almus_product_category_company
-#: model:ir.model,name:almus_product_category_company.model_almus_feature_mixin
-msgid "Mixin para verificar features Almus"
-msgstr ""
-
-#. module: almus_product_category_company
-#: model:ir.model.fields,field_description:almus_product_category_company.field_almus_feature_mixin__display_name
-msgid "Display Name"
-msgstr ""
-
-#. module: almus_product_category_company
-#: model:ir.model.fields,field_description:almus_product_category_company.field_almus_feature_mixin__id
-msgid "ID"
+#: model:ir.model,name:almus_product_category_company.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: almus_product_category_company

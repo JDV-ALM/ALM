@@ -1,4 +1,4 @@
- # Almus Product Category per Company
+# Almus Product Category per Company
 
 ## Descripción
 
@@ -33,9 +33,8 @@ Este módulo modifica el comportamiento estándar de Odoo para que las categorí
 
 1. Ve a **Configuración → Ajustes**
 2. Busca la sección **Almus Dev**
-3. Haz clic en **Gestionar Aplicaciones**
-4. Encuentra "Categorías de Producto por Empresa"
-5. Haz clic en **Activar**
+3. Encuentra "Categorías de Producto por Empresa"
+4. Activa la casilla para habilitar la funcionalidad
 
 ### Uso
 
@@ -51,7 +50,7 @@ Una vez activado:
 Para desactivar la funcionalidad:
 
 1. Ve a **Configuración → Ajustes → Almus Dev**
-2. En la tarjeta de "Categorías de Producto por Empresa", haz clic en **Desactivar**
+2. Desactiva la casilla "Categorías de Producto por Empresa"
 3. Las reglas de seguridad se desactivarán pero los datos de empresa en las categorías se mantendrán
 
 ## Comportamiento Técnico

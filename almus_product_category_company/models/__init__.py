@@ -1,3 +1,2 @@
-from . import almus_mixin
+from . import res_config_settings
 from . import product_category
-from . import almus_app_config

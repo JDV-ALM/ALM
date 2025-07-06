@@ -1,9 +1,9 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
+
 class ProductCategory(models.Model):
-    _name = 'product.category'
-    _inherit = ['product.category', 'almus.feature.mixin']
+    _inherit = 'product.category'
     
     company_id = fields.Many2one(
         'res.company',
@@ -12,10 +12,17 @@ class ProductCategory(models.Model):
         help="Dejar vacío para compartir entre todas las empresas"
     )
     
+    @api.model
+    def _is_feature_enabled(self):
+        """Verificar si la funcionalidad está habilitada"""
+        return self.env['ir.config_parameter'].sudo().get_param(
+            'almus_product_category_company.enabled', 'False'
+        ) == 'True'
+    
     @api.model_create_multi
     def create(self, vals_list):
         """Asignar empresa automáticamente si la funcionalidad está habilitada"""
-        if self._almus_feature_enabled('product_category_company'):
+        if self._is_feature_enabled():
             for vals in vals_list:
                 if 'company_id' not in vals:
                     vals['company_id'] = self.env.company.id
@@ -24,7 +31,7 @@ class ProductCategory(models.Model):
     @api.constrains('parent_id', 'company_id')
     def _check_parent_company(self):
         """Validar que la categoría padre pertenezca a la misma empresa"""
-        if not self._almus_feature_enabled('product_category_company'):
+        if not self._is_feature_enabled():
             return
             
         for category in self:
@@ -37,7 +44,7 @@ class ProductCategory(models.Model):
     def _search(self, domain, offset=0, limit=None, order=None):
         """Override search para asegurar filtrado por empresa cuando está habilitado"""
         # Si la funcionalidad no está habilitada, comportamiento estándar
-        if not self._almus_feature_enabled('product_category_company'):
+        if not self._is_feature_enabled():
             return super()._search(domain, offset, limit, order)
             
         # Si se quiere bypassear el filtro o es superusuario
@@ -56,15 +63,15 @@ class ProductCategory(models.Model):
             
         return super()._search(domain, offset, limit, order)
     
-    def _get_display_name(self, options):
+    def _compute_display_name(self):
         """Agregar empresa al nombre si está en contexto multi-empresa"""
-        name = super()._get_display_name(options)
+        super()._compute_display_name()
         
         # Solo si la funcionalidad está habilitada y es multi-empresa
-        if (self._almus_feature_enabled('product_category_company') and 
+        if (self._is_feature_enabled() and 
             self.env.user.has_group('base.group_multi_company') and
-            self.company_id and
             len(self.env.companies) > 1):
-            name = f"{name} [{self.company_id.name}]"
             
-        return name
+            for category in self:
+                if category.company_id:
+                    category.display_name = f"{category.display_name} [{category.company_id.name}]"

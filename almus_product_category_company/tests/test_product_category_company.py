@@ -1,15 +1,12 @@
- from odoo.tests import TransactionCase, tagged
+from odoo.tests import TransactionCase, tagged
 from odoo.exceptions import ValidationError
+
 
 @tagged('post_install', '-at_install')
 class TestAlmusProductCategoryCompany(TransactionCase):
     
     def setUp(self):
         super().setUp()
-        # Obtener la configuración de la app
-        self.app_config = self.env['almus.app.config'].search([
-            ('name', '=', 'product_category_company')
-        ])
         
         # Crear empresas de prueba
         self.company_1 = self.env.company
@@ -33,10 +30,28 @@ class TestAlmusProductCategoryCompany(TransactionCase):
                 self.env.ref('base.group_multi_company').id
             ])]
         })
+        
+        # Configuración
+        self.config_param = self.env['ir.config_parameter'].sudo()
+        
+    def _enable_feature(self):
+        """Activar la funcionalidad"""
+        settings = self.env['res.config.settings'].create({
+            'almus_product_category_company_enabled': True
+        })
+        settings.set_values()
+        
+    def _disable_feature(self):
+        """Desactivar la funcionalidad"""
+        settings = self.env['res.config.settings'].create({
+            'almus_product_category_company_enabled': False
+        })
+        settings.set_values()
     
     def test_01_feature_disabled_by_default(self):
         """Verificar que la funcionalidad está deshabilitada por defecto"""
-        self.assertFalse(self.app_config.is_enabled)
+        param_value = self.config_param.get_param('almus_product_category_company.enabled', 'False')
+        self.assertEqual(param_value, 'False')
         
         # Crear categoría sin la funcionalidad habilitada
         category = self.env['product.category'].create({
@@ -49,9 +64,11 @@ class TestAlmusProductCategoryCompany(TransactionCase):
     def test_02_enable_feature(self):
         """Probar activación de la funcionalidad"""
         # Activar la funcionalidad
-        result = self.app_config.action_enable()
-        self.assertTrue(self.app_config.is_enabled)
-        self.assertEqual(result['params']['type'], 'success')
+        self._enable_feature()
+        
+        # Verificar parámetro
+        param_value = self.config_param.get_param('almus_product_category_company.enabled')
+        self.assertEqual(param_value, 'True')
         
         # Verificar que las reglas de seguridad se activaron
         rule1 = self.env.ref('almus_product_category_company.product_category_company_rule')
@@ -61,7 +78,7 @@ class TestAlmusProductCategoryCompany(TransactionCase):
     
     def test_03_category_with_company_auto_assign(self):
         """Verificar que las categorías se crean con empresa automáticamente"""
-        self.app_config.is_enabled = True
+        self._enable_feature()
         
         # Crear categoría sin especificar company_id
         category = self.env['product.category'].create({
@@ -73,7 +90,7 @@ class TestAlmusProductCategoryCompany(TransactionCase):
     
     def test_04_category_with_specific_company(self):
         """Verificar creación con empresa específica"""
-        self.app_config.is_enabled = True
+        self._enable_feature()
         
         # Crear categoría con empresa específica
         category = self.env['product.category'].create({
@@ -85,7 +102,7 @@ class TestAlmusProductCategoryCompany(TransactionCase):
     
     def test_05_multi_company_isolation(self):
         """Verificar aislamiento entre empresas"""
-        self.app_config.is_enabled = True
+        self._enable_feature()
         
         # Crear categorías en diferentes empresas
         cat_company1 = self.env['product.category'].create({
@@ -120,7 +137,7 @@ class TestAlmusProductCategoryCompany(TransactionCase):
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])]
         })
         
-        # No debe ver categorías de otras empresas
+        # No debe ver categorías de otras empresas cuando las reglas están activas
         categories_single = self.env['product.category'].with_user(single_company_user).search([])
         self.assertNotIn(cat_company1, categories_single)
         self.assertNotIn(cat_company2, categories_single)
@@ -128,7 +145,7 @@ class TestAlmusProductCategoryCompany(TransactionCase):
     
     def test_06_parent_category_validation(self):
         """Verificar validación de categoría padre en la misma empresa"""
-        self.app_config.is_enabled = True
+        self._enable_feature()
         
         # Crear categoría padre
         parent_cat = self.env['product.category'].create({
@@ -162,7 +179,7 @@ class TestAlmusProductCategoryCompany(TransactionCase):
         self.assertFalse(cat2.company_id)
         
         # Activar la funcionalidad (esto ejecuta la migración)
-        self.app_config.action_enable()
+        self._enable_feature()
         
         # Verificar que se asignó la empresa actual
         cat1.invalidate_recordset()
@@ -173,12 +190,14 @@ class TestAlmusProductCategoryCompany(TransactionCase):
     def test_08_disable_feature(self):
         """Probar desactivación de la funcionalidad"""
         # Primero activar
-        self.app_config.is_enabled = True
+        self._enable_feature()
         
         # Desactivar
-        result = self.app_config.action_disable()
-        self.assertFalse(self.app_config.is_enabled)
-        self.assertEqual(result['params']['type'], 'info')
+        self._disable_feature()
+        
+        # Verificar parámetro
+        param_value = self.config_param.get_param('almus_product_category_company.enabled')
+        self.assertEqual(param_value, 'False')
         
         # Verificar que las reglas se desactivaron
         rule1 = self.env.ref('almus_product_category_company.product_category_company_rule')
@@ -188,7 +207,7 @@ class TestAlmusProductCategoryCompany(TransactionCase):
     
     def test_09_search_method_filtering(self):
         """Verificar que el método _search filtra correctamente"""
-        self.app_config.is_enabled = True
+        self._enable_feature()
         
         # Crear categorías para diferentes empresas
         cat1 = self.env['product.category'].create({
@@ -215,7 +234,7 @@ class TestAlmusProductCategoryCompany(TransactionCase):
     
     def test_10_display_name_multi_company(self):
         """Verificar que el display_name muestra la empresa en contexto multi-empresa"""
-        self.app_config.is_enabled = True
+        self._enable_feature()
         
         category = self.env['product.category'].create({
             'name': 'Display Name Test',

@@ -18,13 +18,13 @@
     'website': 'https://www.almus.dev',
     'category': 'Inventory',
     'version': '18.0.1.0.0',
+    'license': 'LGPL-3',
     'depends': ['almus_base', 'product'],
     'application': True,
     'auto_install': False,
-    'license': 'LGPL-3',
     'data': [
-        'data/almus_app_config.xml',
         'security/product_category_security.xml',
+        'views/res_config_settings_views.xml',
         'views/product_category_views.xml',
     ],
 }
