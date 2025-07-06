@@ -95,15 +95,24 @@ class AlmusAppRegistry(models.Model):
                 })
                 _logger.info('Registrada nueva app Almus: %s', module.name)
             
-            elif existing and module.state == 'uninstalled':
-                # Desactivar si se desinstaló
-                existing.active = False
-                _logger.info('Desactivada app Almus: %s', module.name)
+            elif existing:
+                # Actualizar estado del registro existente
+                if module.state == 'uninstalled':
+                    existing.active = False
+                    _logger.info('Desactivada app Almus: %s', module.name)
+                elif module.state in ['installed', 'to upgrade']:
+                    existing.active = True
+                    # Actualizar display_name por si cambió
+                    existing.display_name = module.shortdesc or module.name
+                    _logger.info('Actualizada app Almus: %s', module.name)
         
         # Limpiar registros huérfanos
         orphan_apps = self.search([('module_id', '=', False)])
         if orphan_apps:
             orphan_apps.unlink()
+        
+        # Asegurar que se guarden los cambios
+        self.env.cr.commit()
             
         return True
     

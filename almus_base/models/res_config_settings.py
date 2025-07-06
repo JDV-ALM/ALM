@@ -34,11 +34,18 @@ class ResConfigSettings(models.TransientModel):
         """Refrescar manualmente el registro de apps Almus"""
         self.env['almus.app.registry'].sync_almus_apps()
         
-        # Recargar la vista con el registro actualizado
+        # Forzar el recálculo de los campos
+        self._compute_almus_stats()
+        
+        # Mostrar notificación sin recargar la vista
         return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'res.config.settings',
-            'view_mode': 'form',
-            'target': 'inline',
-            'context': {'force_almus_sync': True},
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Sincronización Completada'),
+                'message': _('El registro de aplicaciones Almus ha sido actualizado.'),
+                'type': 'success',
+                'sticky': False,
+                'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
+            }
         }
