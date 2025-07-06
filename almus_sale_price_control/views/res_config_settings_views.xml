@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_almus_sale_price_control_res_config_settings" model="ir.ui.view">
+        <field name="name">almus.sale_price_control.res.config.settings.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="almus_base.view_almus_base_res_config_settings"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='almus_app_settings']" position="inside">
+                <setting id="almus_sale_price_control_settings" 
+                         string="Control de Precios en Ventas"
+                         help="Gestiona permisos y restricciones sobre precios y listas de precios en el módulo de ventas">
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label for="almus_sale_price_control_enabled" class="col-lg-3 o_light_label"/>
+                            <field name="almus_sale_price_control_enabled"/>
+                        </div>
+                        <div class="row mt8" invisible="not almus_sale_price_control_enabled">
+                            <label for="almus_sale_restrict_pricelist_access" class="col-lg-3 o_light_label"/>
+                            <field name="almus_sale_restrict_pricelist_access"/>
+                            <div class="text-muted">
+                                Solo los administradores de ventas podrán ver y modificar las listas de precios
+                            </div>
+                        </div>
+                        <div class="row mt8" invisible="not almus_sale_price_control_enabled">
+                            <label for="almus_sale_restrict_price_edit" class="col-lg-3 o_light_label"/>
+                            <field name="almus_sale_restrict_price_edit"/>
+                            <div class="text-muted">
+                                Los vendedores no podrán modificar los precios unitarios en las líneas de venta
+                            </div>
+                        </div>
+                        <div class="row mt8" invisible="not almus_sale_price_control_enabled">
+                            <label for="almus_sale_enable_line_pricelist" class="col-lg-3 o_light_label"/>
+                            <field name="almus_sale_enable_line_pricelist"/>
+                            <div class="text-muted">
+                                Permite seleccionar una lista de precios diferente para cada línea de la orden de venta
+                            </div>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

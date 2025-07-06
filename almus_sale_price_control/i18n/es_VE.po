@@ -1,0 +1,100 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* almus_sale_price_control
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-01 00:00:00\n"
+"PO-Revision-Date: 2024-01-01 00:00:00\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: almus_sale_price_control
+#: model:ir.model.fields,field_description:almus_sale_price_control.field_res_config_settings__almus_sale_price_control_enabled
+msgid "Enable Price Control"
+msgstr "Activar Control de Precios"
+
+#. module: almus_sale_price_control
+#: model:ir.model.fields,field_description:almus_sale_price_control.field_res_config_settings__almus_sale_restrict_pricelist_access
+msgid "Restrict Pricelist Access"
+msgstr "Restringir Acceso a Listas de Precios"
+
+#. module: almus_sale_price_control
+#: model:ir.model.fields,field_description:almus_sale_price_control.field_res_config_settings__almus_sale_restrict_price_edit
+msgid "Restrict Price Editing in Sales"
+msgstr "Restringir Edición de Precios en Ventas"
+
+#. module: almus_sale_price_control
+#: model:ir.model.fields,field_description:almus_sale_price_control.field_res_config_settings__almus_sale_enable_line_pricelist
+msgid "Enable Pricelist per Line"
+msgstr "Habilitar Lista de Precios por Línea"
+
+#. module: almus_sale_price_control
+#: model:ir.model.fields,field_description:almus_sale_price_control.field_sale_order_line__line_pricelist_id
+msgid "Line Pricelist"
+msgstr "Lista de Precios de Línea"
+
+#. module: almus_sale_price_control
+#: code:addons/almus_sale_price_control/models/sale_order.py:0
+#, python-format
+msgid "You don't have permission to change the order pricelist."
+msgstr "No tiene permisos para cambiar la lista de precios de la orden."
+
+#. module: almus_sale_price_control
+#: code:addons/almus_sale_price_control/models/sale_order_line.py:0
+#, python-format
+msgid "You don't have permission to modify the unit price."
+msgstr "No tiene permisos para modificar el precio unitario."
+
+#. module: almus_sale_price_control
+#: code:addons/almus_sale_price_control/models/sale_order_line.py:0
+#, python-format
+msgid "You don't have permission to create lines with custom prices."
+msgstr "No tiene permisos para crear líneas con precios personalizados."
+
+#. module: almus_sale_price_control
+#: model:res.groups,name:almus_sale_price_control.group_sale_price_editor
+msgid "Sales Price Editor"
+msgstr "Editor de Precios en Ventas"
+
+#. module: almus_sale_price_control
+#: model:res.groups,name:almus_sale_price_control.group_pricelist_manager
+msgid "Pricelist Manager"
+msgstr "Gestor de Listas de Precios"
+
+#. module: almus_sale_price_control
+#: model:ir.model.fields,help:almus_sale_price_control.field_res_config_settings__almus_sale_price_control_enabled
+msgid "Enable price control restrictions in sales"
+msgstr "Activa las restricciones de control de precios en ventas"
+
+#. module: almus_sale_price_control
+#: model:ir.model.fields,help:almus_sale_price_control.field_res_config_settings__almus_sale_restrict_pricelist_access
+msgid "Only administrators will be able to view and modify pricelists"
+msgstr "Solo los administradores podrán ver y modificar las listas de precios"
+
+#. module: almus_sale_price_control
+#: model:ir.model.fields,help:almus_sale_price_control.field_res_config_settings__almus_sale_restrict_price_edit
+msgid "Salespeople will not be able to modify prices in sales lines"
+msgstr "Los vendedores no podrán modificar los precios unitarios en las líneas de venta"
+
+#. module: almus_sale_price_control
+#: model:ir.model.fields,help:almus_sale_price_control.field_res_config_settings__almus_sale_enable_line_pricelist
+msgid "Allows selecting a different pricelist for each sale line"
+msgstr "Permite seleccionar una lista de precios diferente para cada línea de venta"
+
+#. module: almus_sale_price_control
+#: model:ir.model.fields,help:almus_sale_price_control.field_sale_order_line__line_pricelist_id
+msgid "Specific pricelist for this line"
+msgstr "Lista de precios específica para esta línea"
+
+#. module: almus_sale_price_control
+#: code:addons/almus_sale_price_control/models/product_pricelist.py:0
+#, python-format
+msgid "Only administrators can %s pricelists."
+msgstr "Solo los administradores pueden %s listas de precios."
