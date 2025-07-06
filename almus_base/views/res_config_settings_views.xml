@@ -11,45 +11,24 @@
                         <div class="row">
                             <div class="col-12">
                                 <!-- Header con logo y título -->
-                                <div class="d-flex align-items-center mb-4">
+                                <div class="d-flex align-items-center mb-3">
                                     <img src="/almus_base/static/description/icon.png" 
                                          alt="Almus Dev" 
-                                         style="width: 64px; height: 64px; margin-right: 16px;"
+                                         style="width: 48px; height: 48px; margin-right: 16px;"
                                          onerror="this.style.display='none'"/>
                                     <div>
-                                        <h3 class="mb-0">Aplicaciones Almus Dev</h3>
-                                        <p class="text-muted mb-0">
-                                            <field name="almus_installed_apps" class="oe_inline fw-bold"/> aplicación(es) instalada(s)
-                                        </p>
+                                        <h4 class="mb-0">Aplicaciones de Almus</h4>
                                     </div>
                                 </div>
                                 
-                                <!-- Lista de aplicaciones -->
-                                <div class="card" invisible="almus_installed_apps == 0">
-                                    <div class="card-body">
-                                        <field name="almus_app_list" nolabel="1"/>
-                                    </div>
-                                </div>
-                                
-                                <!-- Mensaje cuando no hay apps -->
-                                <div class="alert alert-info" invisible="almus_installed_apps != 0">
+                                <!-- Información -->
+                                <div class="alert alert-info">
                                     <i class="fa fa-info-circle"/> 
-                                    No hay aplicaciones Almus instaladas actualmente. 
                                     Las aplicaciones Almus extienden las funcionalidades de Odoo de manera modular.
                                 </div>
                             </div>
                         </div>
                     </block>
-                    
-                    <!-- Título para configuraciones (solo visible si hay apps) -->
-                    <div class="row mt32 mb16" invisible="almus_installed_apps == 0">
-                        <div class="col-12">
-                            <h4 class="text-muted">
-                                <i class="fa fa-cogs"/> Configuración de Aplicaciones
-                            </h4>
-                            <hr/>
-                        </div>
-                    </div>
                     
                     <!-- Bloque donde otras apps pueden agregar sus configuraciones -->
                     <block name="almus_app_settings">
@@ -58,20 +37,6 @@
                         usando xpath para insertar dentro de este bloque
                         -->
                     </block>
-                    
-                    <!-- Footer informativo -->
-                    <div class="row mt32">
-                        <div class="col-12 text-center text-muted">
-                            <hr class="mb-3"/>
-                            <p class="mb-0">
-                                <i class="fa fa-code"/> Desarrollado por 
-                                <a href="https://www.almus.dev" target="_blank" class="text-decoration-none">
-                                    Almus Dev
-                                </a>
-                                - Especialistas en Odoo
-                            </p>
-                        </div>
-                    </div>
                 </app>
             </xpath>
         </field>
