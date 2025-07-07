@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from odoo import models, api
+from odoo import models, api, fields
 from odoo.exceptions import UserError, AccessError
 
 _logger = logging.getLogger(__name__)
@@ -8,6 +8,17 @@ _logger = logging.getLogger(__name__)
 
 class ProductPricelist(models.Model):
     _inherit = 'product.pricelist'
+    
+    is_admin_user = fields.Boolean(
+        compute='_compute_is_admin_user',
+        store=False
+    )
+    
+    @api.depends_context('uid')
+    def _compute_is_admin_user(self):
+        is_admin = self.env.user.has_group('sales_team.group_sale_manager')
+        for record in self:
+            record.is_admin_user = is_admin
     
     @api.model
     def check_access_rights(self, operation, raise_exception=True):
