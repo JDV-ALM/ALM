@@ -1,4 +1,4 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import logging
 from odoo import models, fields, api
 from odoo.exceptions import UserError
@@ -38,8 +38,9 @@ class SaleOrderLine(models.Model):
             'almus_sale_pricelist_control.pricelist_per_line', 'True'
         ) == 'True'
         
+        show = enabled and pricelist_per_line
         for line in self:
-            line.show_line_pricelist = enabled and pricelist_per_line
+            line.show_line_pricelist = show
     
     @api.depends('order_id')
     def _compute_is_price_editable(self):
