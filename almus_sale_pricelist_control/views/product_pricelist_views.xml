@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista de lista de listas de precios -->
+    <record id="view_product_pricelist_list_inherit_almus" model="ir.ui.view">
+        <field name="name">product.pricelist.list.inherit.almus</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view_list"/>
+        <field name="arch" type="xml">
+            <!-- Agregar indicador visual para administradores -->
+            <xpath expr="//list" position="attributes">
+                <attribute name="decoration-muted">not env.user.has_group('sales_team.group_sale_manager')</attribute>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Vista de formulario de lista de precios -->
+    <record id="view_product_pricelist_form_inherit_almus" model="ir.ui.view">
+        <field name="name">product.pricelist.form.inherit.almus</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Agregar banner informativo para no administradores -->
+            <xpath expr="//form/sheet" position="before">
+                <div class="alert alert-warning" role="alert" 
+                     invisible="env.user.has_group('sales_team.group_sale_manager')">
+                    <i class="fa fa-info-circle"/> Solo los administradores de ventas pueden modificar las listas de precios.
+                </div>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Modificar los botones de acción según permisos -->
+    <record id="product_pricelist_action_inherit_almus" model="ir.actions.act_window">
+        <field name="name">Listas de Precios</field>
+        <field name="res_model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_action2"/>
+        <field name="context">{'default_base': 'list_price', 'almus_pricelist_control': True}</field>
+    </record>
+</odoo>

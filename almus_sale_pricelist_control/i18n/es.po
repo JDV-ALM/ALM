@@ -1,0 +1,105 @@
+# Translation of Odoo Module.
+# This file contains the translation of the following modules:
+# 	* almus_sale_pricelist_control
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Module 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: almus_sale_pricelist_control
+#: model:ir.model.fields,field_description:almus_sale_pricelist_control.field_res_config_settings__almus_sale_pricelist_control_enabled
+msgid "Enable Pricelist Control"
+msgstr "Activar Control de Listas de Precios"
+
+#. module: almus_sale_pricelist_control
+#: model:ir.model.fields,field_description:almus_sale_pricelist_control.field_res_config_settings__almus_restrict_pricelist_edit
+msgid "Restrict Pricelist Editing"
+msgstr "Restringir Edición de Listas"
+
+#. module: almus_sale_pricelist_control
+#: model:ir.model.fields,field_description:almus_sale_pricelist_control.field_res_config_settings__almus_hide_unit_price
+msgid "Hide Unit Price"
+msgstr "Ocultar Precio Unitario"
+
+#. module: almus_sale_pricelist_control
+#: model:ir.model.fields,field_description:almus_sale_pricelist_control.field_res_config_settings__almus_pricelist_per_line
+msgid "Pricelist per Line"
+msgstr "Lista de Precios por Línea"
+
+#. module: almus_sale_pricelist_control
+#: model:ir.model.fields,field_description:almus_sale_pricelist_control.field_res_config_settings__almus_apply_per_company
+msgid "Apply per Company"
+msgstr "Aplicar por Compañía"
+
+#. module: almus_sale_pricelist_control
+#: model:ir.model.fields,field_description:almus_sale_pricelist_control.field_sale_order_line__line_pricelist_id
+msgid "Pricelist"
+msgstr "Lista de Precios"
+
+#. module: almus_sale_pricelist_control
+#: model:ir.model.fields,help:almus_sale_pricelist_control.field_sale_order_line__line_pricelist_id
+msgid "Specific pricelist for this line"
+msgstr "Lista de precios específica para esta línea"
+
+#. module: almus_sale_pricelist_control
+#: code:addons/almus_sale_pricelist_control/models/product_pricelist.py:0
+#, python-format
+msgid "Only sales managers can modify pricelists"
+msgstr "Solo los administradores de ventas pueden modificar las listas de precios"
+
+#. module: almus_sale_pricelist_control
+#: model_terms:ir.ui.view,arch_db:almus_sale_pricelist_control.view_product_pricelist_form_inherit_almus
+msgid "Only sales managers can modify pricelists."
+msgstr "Solo los administradores de ventas pueden modificar las listas de precios."
+
+#. module: almus_sale_pricelist_control
+#: model:ir.model,name:almus_sale_pricelist_control.model_product_pricelist
+msgid "Product Pricelist"
+msgstr "Lista de Precios de Producto"
+
+#. module: almus_sale_pricelist_control
+#: model:ir.model,name:almus_sale_pricelist_control.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea de Orden de Venta"
+
+#. module: almus_sale_pricelist_control
+#: model:ir.model,name:almus_sale_pricelist_control.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de Configuración"
+
+#. module: almus_sale_pricelist_control
+#: model_terms:ir.ui.view,arch_db:almus_sale_pricelist_control.view_almus_sale_pricelist_control_res_config_settings
+msgid "Pricelist Control"
+msgstr "Control de Listas de Precios"
+
+#. module: almus_sale_pricelist_control
+#: model_terms:ir.ui.view,arch_db:almus_sale_pricelist_control.view_almus_sale_pricelist_control_res_config_settings
+msgid "Manage pricelist editing control and prices in sales orders"
+msgstr "Gestiona el control de edición de listas de precios y precios en órdenes de venta"
+
+#. module: almus_sale_pricelist_control
+#: model_terms:ir.ui.view,arch_db:almus_sale_pricelist_control.view_almus_sale_pricelist_control_res_config_settings
+msgid "If enabled, only sales managers can create, edit or delete pricelists"
+msgstr "Si está activo, solo los administradores de ventas podrán crear, editar o eliminar listas de precios"
+
+#. module: almus_sale_pricelist_control
+#: model_terms:ir.ui.view,arch_db:almus_sale_pricelist_control.view_almus_sale_pricelist_control_res_config_settings
+msgid "Hides the unit price field in sales lines for non-administrator users"
+msgstr "Oculta el campo de precio unitario en las líneas de venta para usuarios no administradores"
+
+#. module: almus_sale_pricelist_control
+#: model_terms:ir.ui.view,arch_db:almus_sale_pricelist_control.view_almus_sale_pricelist_control_res_config_settings
+msgid "Allows selecting a different pricelist for each sales order line"
+msgstr "Permite seleccionar una lista de precios diferente para cada línea de la orden de venta"
+
+#. module: almus_sale_pricelist_control
+#: model_terms:ir.ui.view,arch_db:almus_sale_pricelist_control.view_almus_sale_pricelist_control_res_config_settings
+msgid "Apply this configuration only to the current company"
+msgstr "Aplicar esta configuración solo a la compañía actual"
