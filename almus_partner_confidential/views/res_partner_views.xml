@@ -95,39 +95,4 @@
         </field>
     </record>
     
-    <!-- Vista de búsqueda con filtros para información confidencial -->
-    <record id="view_partner_search_confidential" model="ir.ui.view">
-        <field name="name">almus.partner.confidential.search</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_res_partner_filter"/>
-        <field name="arch" type="xml">
-            <xpath expr="//search" position="inside">
-                <separator/>
-                <filter string="Con Info. Confidencial" 
-                        name="has_confidential"
-                        domain="['|', '|', '|', '|', '|', '|', '|', '|', '|',
-                                ('almus_confidential_name', '!=', False),
-                                ('almus_confidential_email', '!=', False),
-                                ('almus_wechat_id', '!=', False),
-                                ('almus_whatsapp_number', '!=', False),
-                                ('almus_contact_person', '!=', False),
-                                ('almus_payment_terms_notes', '!=', False),
-                                ('almus_price_conditions', '!=', False),
-                                ('almus_bank_info', '!=', False),
-                                ('almus_internal_notes', '!=', False),
-                                ('almus_credit_info', '!=', False)]"
-                        groups="almus_partner_confidential.group_partner_confidential_user"/>
-                <separator/>
-                <field name="almus_confidential_name" 
-                       string="Nombre Internacional"
-                       groups="almus_partner_confidential.group_partner_confidential_user"/>
-                <field name="almus_wechat_id" 
-                       string="WeChat ID"
-                       groups="almus_partner_confidential.group_partner_confidential_user"/>
-                <field name="almus_confidential_email" 
-                       string="Correo Confidencial"
-                       groups="almus_partner_confidential.group_partner_confidential_user"/>
-            </xpath>
-        </field>
-    </record>
 </odoo>
