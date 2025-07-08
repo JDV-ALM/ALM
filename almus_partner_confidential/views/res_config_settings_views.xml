@@ -6,57 +6,41 @@
         <field name="inherit_id" ref="almus_base.view_almus_base_res_config_settings"/>
         <field name="arch" type="xml">
             <xpath expr="//block[@name='almus_app_settings']" position="inside">
-                <setting id="almus_partner_confidential_settings" 
-                         string="Información Confidencial de Contactos"
-                         help="Gestiona el acceso a información sensible de proveedores y contactos">
-                    <div class="content-group">
-                        <!-- Activación del módulo -->
-                        <div class="row mt16">
-                            <label for="almus_partner_confidential_enabled" class="col-lg-3 o_light_label"/>
-                            <field name="almus_partner_confidential_enabled"/>
+                <block title="Información Confidencial de Contactos" name="almus_partner_confidential_block">
+                    <setting id="almus_partner_confidential_settings" 
+                             string="Activar Información Confidencial"
+                             help="Habilita la pestaña de información confidencial en los contactos">
+                        <field name="almus_partner_confidential_enabled"/>
+                    </setting>
+                    
+                    <!-- Información sobre la funcionalidad -->
+                    <div class="text-muted mb-3">
+                        <p>
+                            <i class="fa fa-shield text-info"/> Este módulo agrega una pestaña "Información Confidencial" en el formulario de contactos
+                            que solo es visible para usuarios con el permiso correspondiente.
+                        </p>
+                        <p class="mb-0">
+                            <strong>Campos protegidos:</strong> Nombre internacional, WeChat ID, WhatsApp, 
+                            términos de pago, condiciones de precios, información bancaria y notas internas.
+                        </p>
+                    </div>
+                    
+                    <!-- Instrucciones para administradores -->
+                    <div class="o_setting_box">
+                        <div class="o_setting_box_title">
+                            <strong>¿Cómo otorgar acceso?</strong>
                         </div>
-                        
-                        <!-- Información sobre la funcionalidad -->
-                        <div class="row mt16">
-                            <div class="col-12">
-                                <div class="alert alert-info" role="alert">
-                                    <h4 class="alert-heading">
-                                        <i class="fa fa-shield"/> Información Confidencial Protegida
-                                    </h4>
-                                    <p>
-                                        Este módulo agrega una pestaña "Información Confidencial" en el formulario de contactos
-                                        que solo es visible para usuarios con el permiso correspondiente.
-                                    </p>
-                                    <hr/>
-                                    <p class="mb-0">
-                                        <strong>Campos protegidos:</strong> Nombre internacional, WeChat ID, WhatsApp, 
-                                        términos de pago, condiciones de precios, información bancaria y notas internas.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Instrucciones para administradores -->
-                        <div class="row mt16">
-                            <div class="col-12">
-                                <div class="o_setting_box">
-                                    <div class="o_setting_box_title">
-                                        <strong>¿Cómo otorgar acceso?</strong>
-                                    </div>
-                                    <div class="text-muted">
-                                        <ol class="mb-0">
-                                            <li>Ir a Configuración → Usuarios y Compañías → Usuarios</li>
-                                            <li>Seleccionar el usuario deseado</li>
-                                            <li>En la pestaña "Permisos de Acceso"</li>
-                                            <li>En la sección "Información Confidencial de Contactos"</li>
-                                            <li>Marcar "Ver Información Confidencial" (solo lectura) o "Administrar Información Confidencial" (lectura y escritura)</li>
-                                        </ol>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="text-muted">
+                            <ol class="mb-0">
+                                <li>Ir a Configuración → Usuarios y Compañías → Usuarios</li>
+                                <li>Seleccionar el usuario deseado</li>
+                                <li>En la pestaña "Permisos de Acceso"</li>
+                                <li>En la sección "Información Confidencial de Contactos"</li>
+                                <li>Marcar "Ver Información Confidencial" (solo lectura) o "Administrar Información Confidencial" (lectura y escritura)</li>
+                            </ol>
                         </div>
                     </div>
-                </setting>
+                </block>
             </xpath>
         </field>
     </record>
