@@ -15,21 +15,21 @@
                         <group string="Datos de Contacto Internacional">
                             <field name="almus_confidential_name" 
                                    placeholder="Nombre en idioma original o comercial internacional"
-                                   readonly="context.get('readonly_confidential', not user.has_group('almus_partner_confidential.group_partner_confidential_manager'))"/>
+                                   groups="almus_partner_confidential.group_partner_confidential_user"/>
                             <field name="almus_confidential_email" 
                                    widget="email" 
                                    placeholder="correo@privado.com"
-                                   readonly="context.get('readonly_confidential', not user.has_group('almus_partner_confidential.group_partner_confidential_manager'))"/>
+                                   groups="almus_partner_confidential.group_partner_confidential_user"/>
                             <field name="almus_wechat_id" 
                                    placeholder="ID de WeChat"
-                                   readonly="context.get('readonly_confidential', not user.has_group('almus_partner_confidential.group_partner_confidential_manager'))"/>
+                                   groups="almus_partner_confidential.group_partner_confidential_user"/>
                             <field name="almus_whatsapp_number" 
                                    widget="phone" 
                                    placeholder="+86 123 456 7890"
-                                   readonly="context.get('readonly_confidential', not user.has_group('almus_partner_confidential.group_partner_confidential_manager'))"/>
+                                   groups="almus_partner_confidential.group_partner_confidential_user"/>
                             <field name="almus_contact_person" 
                                    placeholder="Nombre de la persona clave"
-                                   readonly="context.get('readonly_confidential', not user.has_group('almus_partner_confidential.group_partner_confidential_manager'))"/>
+                                   groups="almus_partner_confidential.group_partner_confidential_user"/>
                         </group>
                         <group string="Información de Auditoría">
                             <field name="almus_confidential_last_update" readonly="1"/>
@@ -41,35 +41,35 @@
                         <field name="almus_payment_terms_notes" 
                                placeholder="Términos de pago especiales negociados con este proveedor..."
                                nolabel="1"
-                               readonly="context.get('readonly_confidential', not user.has_group('almus_partner_confidential.group_partner_confidential_manager'))"/>
+                               groups="almus_partner_confidential.group_partner_confidential_user"/>
                     </group>
                     
                     <group string="Información de Precios">
                         <field name="almus_price_conditions" 
                                placeholder="Descuentos, precios especiales, condiciones de volumen..."
                                nolabel="1"
-                               readonly="context.get('readonly_confidential', not user.has_group('almus_partner_confidential.group_partner_confidential_manager'))"/>
+                               groups="almus_partner_confidential.group_partner_confidential_user"/>
                     </group>
                     
                     <group string="Información Bancaria">
                         <field name="almus_bank_info" 
                                placeholder="Datos bancarios para transferencias internacionales, SWIFT, etc..."
                                nolabel="1"
-                               readonly="context.get('readonly_confidential', not user.has_group('almus_partner_confidential.group_partner_confidential_manager'))"/>
+                               groups="almus_partner_confidential.group_partner_confidential_user"/>
                     </group>
                     
                     <group string="Información de Crédito">
                         <field name="almus_credit_info" 
                                placeholder="Límites de crédito, historial de pagos, referencias..."
                                nolabel="1"
-                               readonly="context.get('readonly_confidential', not user.has_group('almus_partner_confidential.group_partner_confidential_manager'))"/>
+                               groups="almus_partner_confidential.group_partner_confidential_user"/>
                     </group>
                     
                     <group string="Notas Internas Confidenciales">
                         <field name="almus_internal_notes" 
                                placeholder="Información privada que no debe ser compartida..."
                                nolabel="1"
-                               readonly="context.get('readonly_confidential', not user.has_group('almus_partner_confidential.group_partner_confidential_manager'))"/>
+                               groups="almus_partner_confidential.group_partner_confidential_user"/>
                     </group>
                 </page>
             </xpath>

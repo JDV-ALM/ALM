@@ -1,10 +1,11 @@
 from odoo import models, fields, api
+from odoo.exceptions import AccessError
 
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
     
-    # Campos de información confidencial
+    # Campos de información confidencial - ahora con readonly dinámico
     almus_confidential_name = fields.Char(
         string='Nombre Internacional',
         help='Nombre del proveedor en su idioma original o nombre comercial internacional',
@@ -82,6 +83,12 @@ class ResPartner(models.Model):
     @api.model
     def create(self, vals):
         """Registrar creación de información confidencial"""
+        # Verificar permisos si hay datos confidenciales
+        if self._has_confidential_data(vals) and not self.env.user.has_group(
+            'almus_partner_confidential.group_partner_confidential_manager'
+        ):
+            raise AccessError('No tiene permisos para crear información confidencial.')
+            
         if self._has_confidential_data(vals) and self.env.user.has_group(
             'almus_partner_confidential.group_partner_confidential_manager'
         ):
@@ -93,6 +100,12 @@ class ResPartner(models.Model):
     
     def write(self, vals):
         """Registrar modificación de información confidencial"""
+        # Verificar permisos si hay datos confidenciales
+        if self._has_confidential_data(vals) and not self.env.user.has_group(
+            'almus_partner_confidential.group_partner_confidential_manager'
+        ):
+            raise AccessError('No tiene permisos para modificar información confidencial.')
+            
         if self._has_confidential_data(vals) and self.env.user.has_group(
             'almus_partner_confidential.group_partner_confidential_manager'
         ):
