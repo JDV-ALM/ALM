@@ -8,6 +8,5 @@ class ResConfigSettings(models.TransientModel):
     almus_partner_confidential_enabled = fields.Boolean(
         string='Activar Información Confidencial de Contactos',
         config_parameter='almus_partner_confidential.enabled',
-        default=True,
         help='Activa la pestaña de información confidencial en los contactos'
     )
