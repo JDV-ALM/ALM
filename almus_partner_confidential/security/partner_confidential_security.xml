@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Categoría para los grupos de información confidencial -->
+        <record id="module_category_partner_confidential" model="ir.module.category">
+            <field name="name">Información Confidencial de Contactos</field>
+            <field name="description">Gestión de acceso a información confidencial de proveedores y contactos</field>
+            <field name="sequence">20</field>
+        </record>
+        
+        <!-- Grupo base: Usuario con acceso a información confidencial -->
+        <record id="group_partner_confidential_user" model="res.groups">
+            <field name="name">Ver Información Confidencial</field>
+            <field name="category_id" ref="module_category_partner_confidential"/>
+            <field name="comment">Los usuarios en este grupo pueden ver y editar la información confidencial de los contactos</field>
+        </record>
+        
+        <!-- Grupo manager: Puede gestionar permisos de información confidencial -->
+        <record id="group_partner_confidential_manager" model="res.groups">
+            <field name="name">Administrar Información Confidencial</field>
+            <field name="category_id" ref="module_category_partner_confidential"/>
+            <field name="implied_ids" eval="[(4, ref('group_partner_confidential_user'))]"/>
+            <field name="comment">Los usuarios en este grupo pueden administrar qué usuarios tienen acceso a la información confidencial</field>
+        </record>
+        
+        <!-- Asignar el grupo manager a administradores del sistema -->
+        <record model="res.groups" id="base.group_system">
+            <field name="implied_ids" eval="[(4, ref('group_partner_confidential_manager'))]"/>
+        </record>
+    </data>
+</odoo>
