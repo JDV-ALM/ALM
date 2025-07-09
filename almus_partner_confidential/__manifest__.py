@@ -7,15 +7,22 @@
         
         Características principales:
         - Nueva pestaña "Información Confidencial" en contactos
+        - Control de visibilidad mediante configuración en panel Almus
         - Campos específicos para proveedores internacionales
         - Control de acceso mediante permisos de usuario
-        - Configuración desde el panel Almus
+        - Los administradores NO tienen acceso automático
         - Registro de auditoría de cambios
+        - Estadísticas de uso en el panel de configuración
+        
+        Seguridad:
+        - La pestaña solo es visible si la funcionalidad está activada Y el usuario tiene permisos
+        - Permisos separados para lectura y escritura
+        - Los administradores del sistema deben recibir permisos explícitamente
     """,
     'author': 'Almus Dev',
     'website': 'https://www.almus.dev',
     'category': 'Sales/Purchase',
-    'version': '18.0.1.0.0',
+    'version': '18.0.1.0.1',
     'license': 'LGPL-3',
     'depends': [
         'almus_base',
