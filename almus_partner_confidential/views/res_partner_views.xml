@@ -11,29 +11,55 @@
                 <page string="Información Confidencial" 
                       name="almus_confidential_info"
                       groups="almus_partner_confidential.group_partner_confidential_user">
+                    
                     <group>
                         <group string="Datos de Contacto Internacional">
                             <field name="almus_confidential_name" 
                                    placeholder="Nombre en idioma original o comercial internacional"
-                                   groups="almus_partner_confidential.group_partner_confidential_user"/>
+                                   groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                            <field name="almus_confidential_name" 
+                                   placeholder="Nombre en idioma original o comercial internacional"
+                                   readonly="1"
+                                   groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
+                            
                             <field name="almus_confidential_email" 
                                    widget="email" 
                                    placeholder="correo@privado.com"
-                                   groups="almus_partner_confidential.group_partner_confidential_user"/>
+                                   groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                            <field name="almus_confidential_email" 
+                                   widget="email" 
+                                   placeholder="correo@privado.com"
+                                   readonly="1"
+                                   groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
+                            
                             <field name="almus_wechat_id" 
                                    placeholder="ID de WeChat"
-                                   groups="almus_partner_confidential.group_partner_confidential_user"/>
+                                   groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                            <field name="almus_wechat_id" 
+                                   placeholder="ID de WeChat"
+                                   readonly="1"
+                                   groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
+                            
                             <field name="almus_whatsapp_number" 
                                    widget="phone" 
                                    placeholder="+86 123 456 7890"
-                                   groups="almus_partner_confidential.group_partner_confidential_user"/>
+                                   groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                            <field name="almus_whatsapp_number" 
+                                   widget="phone" 
+                                   placeholder="+86 123 456 7890"
+                                   readonly="1"
+                                   groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
+                            
                             <field name="almus_contact_person" 
                                    placeholder="Nombre de la persona clave"
-                                   groups="almus_partner_confidential.group_partner_confidential_user"/>
+                                   groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                            <field name="almus_contact_person" 
+                                   placeholder="Nombre de la persona clave"
+                                   readonly="1"
+                                   groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
                         </group>
-                        <group string="Información de Auditoría">
-                            <field name="almus_confidential_last_update" readonly="1"/>
-                            <field name="almus_confidential_last_user" readonly="1"/>
+                        <group>
+                            <!-- Grupo vacío para mantener el layout -->
                         </group>
                     </group>
                     
@@ -41,35 +67,60 @@
                         <field name="almus_payment_terms_notes" 
                                placeholder="Términos de pago especiales negociados con este proveedor..."
                                nolabel="1"
-                               groups="almus_partner_confidential.group_partner_confidential_user"/>
+                               groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                        <field name="almus_payment_terms_notes" 
+                               placeholder="Términos de pago especiales negociados con este proveedor..."
+                               nolabel="1"
+                               readonly="1"
+                               groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
                     </group>
                     
                     <group string="Información de Precios">
                         <field name="almus_price_conditions" 
                                placeholder="Descuentos, precios especiales, condiciones de volumen..."
                                nolabel="1"
-                               groups="almus_partner_confidential.group_partner_confidential_user"/>
+                               groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                        <field name="almus_price_conditions" 
+                               placeholder="Descuentos, precios especiales, condiciones de volumen..."
+                               nolabel="1"
+                               readonly="1"
+                               groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
                     </group>
                     
                     <group string="Información Bancaria">
                         <field name="almus_bank_info" 
                                placeholder="Datos bancarios para transferencias internacionales, SWIFT, etc..."
                                nolabel="1"
-                               groups="almus_partner_confidential.group_partner_confidential_user"/>
+                               groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                        <field name="almus_bank_info" 
+                               placeholder="Datos bancarios para transferencias internacionales, SWIFT, etc..."
+                               nolabel="1"
+                               readonly="1"
+                               groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
                     </group>
                     
                     <group string="Información de Crédito">
                         <field name="almus_credit_info" 
                                placeholder="Límites de crédito, historial de pagos, referencias..."
                                nolabel="1"
-                               groups="almus_partner_confidential.group_partner_confidential_user"/>
+                               groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                        <field name="almus_credit_info" 
+                               placeholder="Límites de crédito, historial de pagos, referencias..."
+                               nolabel="1"
+                               readonly="1"
+                               groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
                     </group>
                     
                     <group string="Notas Internas Confidenciales">
                         <field name="almus_internal_notes" 
                                placeholder="Información privada que no debe ser compartida..."
                                nolabel="1"
-                               groups="almus_partner_confidential.group_partner_confidential_user"/>
+                               groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                        <field name="almus_internal_notes" 
+                               placeholder="Información privada que no debe ser compartida..."
+                               nolabel="1"
+                               readonly="1"
+                               groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
                     </group>
                 </page>
             </xpath>
@@ -91,8 +142,27 @@
                        string="WeChat"
                        optional="hide"
                        groups="almus_partner_confidential.group_partner_confidential_user"/>
+                <field name="almus_has_confidential" 
+                       string="Info Conf."
+                       optional="hide"
+                       groups="almus_partner_confidential.group_partner_confidential_user"/>
             </xpath>
         </field>
     </record>
     
+    <!-- Vista de búsqueda con filtros confidenciales -->
+    <record id="view_partner_search_confidential" model="ir.ui.view">
+        <field name="name">almus.partner.confidential.search</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="after">
+                <separator groups="almus_partner_confidential.group_partner_confidential_user"/>
+                <filter string="Con Info Confidencial" 
+                        name="has_confidential"
+                        domain="[('almus_has_confidential', '=', True)]"
+                        groups="almus_partner_confidential.group_partner_confidential_user"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
