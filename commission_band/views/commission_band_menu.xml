@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Main Menu -->
+    <menuitem id="menu_commission_band_root"
+              name="Bandas de Comisiones"
+              parent="sale.sale_menu_root"
+              sequence="40"
+              groups="commission_band.group_commission_band_user"/>
+    
+    <!-- My Commissions (for all users) -->
+    <menuitem id="menu_my_commission_calculation"
+              name="Mis Comisiones"
+              parent="menu_commission_band_root"
+              action="action_my_commission_calculation"
+              sequence="10"
+              groups="commission_band.group_commission_band_user"/>
+    
+    
+    <!-- All Commissions (for managers) -->
+    <menuitem id="menu_commission_calculation"
+              name="Todas las Comisiones"
+              parent="menu_commission_band_root"
+              action="action_commission_calculation"
+              sequence="20"
+              groups="commission_band.group_commission_band_manager"/>
+    
+    
+    <!-- Calculations without batch (for managers) -->
+    <menuitem id="menu_commission_calculation_no_batch"
+              name="Comisiones sin Lote"
+              parent="menu_commission_band_root"
+              action="action_commission_calculation_no_batch"
+              sequence="30"
+              groups="commission_band.group_commission_band_manager"/>
+    
+    <!-- Configuration Menu -->
+    <menuitem id="menu_commission_band_config"
+              name="Configuración"
+              parent="menu_commission_band_root"
+              sequence="100"
+              groups="commission_band.group_commission_band_manager"/>
+    
+    <!-- Commission Bands -->
+    <menuitem id="menu_commission_band"
+              name="Bandas de Comisiones"
+              parent="menu_commission_band_config"
+              action="action_commission_band"
+              sequence="10"/>
+    
+    <!-- Commission Rules -->
+    <menuitem id="menu_commission_rule"
+              name="Reglas de Comisiones"
+              parent="menu_commission_band_config"
+              action="action_commission_rule"
+              sequence="20"/>
+    
+    <!-- Salesperson Config -->
+    <menuitem id="menu_salesperson_config"
+              name="Configuración de Vendedores"
+              parent="menu_commission_band_config"
+              action="action_salesperson_config"
+              sequence="30"/>
+    
+    <!-- Batch Management submenu -->
+    <menuitem id="menu_commission_batch_config"
+              name="Gestión de Lotes"
+              parent="menu_commission_band_config"
+              sequence="40"
+              groups="commission_band.group_commission_band_manager"/>
+    
+    <menuitem id="menu_commission_batch_config_batches"
+              name="Lotes de Comisiones"
+              parent="menu_commission_batch_config"
+              action="action_commission_batch"
+              sequence="10"/>
+    
+    <menuitem id="menu_commission_batch_config_documents"
+              name="Documentos de Pago"
+              parent="menu_commission_batch_config"
+              action="action_commission_payment_document"
+              sequence="20"/>
+    
+    
+    <!-- Add to Sales Configuration -->
+    <menuitem id="menu_sale_config_commission_band"
+              name="Bandas de Comisiones"
+              parent="sale.menu_sale_config"
+              sequence="50"
+              groups="commission_band.group_commission_band_manager"/>
+    
+    <menuitem id="menu_sale_config_commission_band_bands"
+              name="Bandas de Comisiones"
+              parent="menu_sale_config_commission_band"
+              action="action_commission_band"
+              sequence="10"/>
+    
+    <menuitem id="menu_sale_config_commission_band_rules"
+              name="Reglas de Comisiones"
+              parent="menu_sale_config_commission_band"
+              action="action_commission_rule"
+              sequence="20"/>
+
+    <menuitem id="menu_sale_config_commission_band_rules"
+              name="Asistente de Configuración"
+              parent="menu_sale_config_commission_band"
+              action="action_commission_band_config_wizard"
+              sequence="30"/>          
+    
+</odoo>
