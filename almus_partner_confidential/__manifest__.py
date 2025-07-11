@@ -1,28 +1,20 @@
 {
-    'name': 'Almus Partner Confidential Information',
-    'summary': 'Gestión de información confidencial de proveedores con control de acceso',
+    'name': 'Almus Información Confidencial de Contactos',
+    'summary': 'Gestiona información confidencial de proveedores y contactos con control de acceso',
     'description': """
-        Este módulo agrega una pestaña de información confidencial en el formulario de contactos
-        que solo es visible para usuarios con permisos específicos.
+        Este módulo agrega una pestaña de información confidencial en los contactos que solo
+        es visible para usuarios con permisos específicos. Permite proteger datos sensibles como:
+        - Información de contacto internacional (WeChat, WhatsApp)
+        - Condiciones comerciales y términos de pago especiales
+        - Información bancaria y de crédito
+        - Notas internas confidenciales
         
-        Características principales:
-        - Nueva pestaña "Información Confidencial" en contactos
-        - Control de visibilidad mediante configuración en panel Almus
-        - Campos específicos para proveedores internacionales
-        - Control de acceso mediante permisos de usuario
-        - Los administradores NO tienen acceso automático
-        - Registro de auditoría de cambios
-        - Estadísticas de uso en el panel de configuración
-        
-        Seguridad:
-        - La pestaña solo es visible si la funcionalidad está activada Y el usuario tiene permisos
-        - Permisos separados para lectura y escritura
-        - Los administradores del sistema deben recibir permisos explícitamente
+        La funcionalidad puede ser activada/desactivada desde la configuración de Almus.
     """,
     'author': 'Almus Dev',
     'website': 'https://www.almus.dev',
-    'category': 'Sales/Purchase',
-    'version': '18.0.1.0.1',
+    'category': 'Sales/CRM',
+    'version': '18.0.1.0.0',
     'license': 'LGPL-3',
     'depends': [
         'almus_base',
@@ -30,11 +22,15 @@
         'contacts',
     ],
     'data': [
-        'security/partner_confidential_security.xml',
+        # Seguridad
+        'security/almus_partner_confidential_security.xml',
         'security/ir.model.access.csv',
-        'views/res_partner_views.xml',
+        
+        # Vistas
         'views/res_config_settings_views.xml',
+        'views/res_partner_views.xml',
     ],
+    'demo': [],
     'installable': True,
     'application': True,
     'auto_install': False,

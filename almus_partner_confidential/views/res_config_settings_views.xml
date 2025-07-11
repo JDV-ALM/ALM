@@ -11,92 +11,31 @@
                              string="Activar Información Confidencial"
                              help="Habilita la pestaña de información confidencial en los contactos">
                         <field name="almus_partner_confidential_enabled"/>
-                        <div class="mt-2" invisible="not almus_partner_confidential_enabled">
-                            <span class="text-muted">
-                                <i class="fa fa-check text-success"/> Funcionalidad activada
-                            </span>
-                        </div>
-                        <div class="mt-2" invisible="almus_partner_confidential_enabled">
-                            <span class="text-muted">
-                                <i class="fa fa-times text-danger"/> Funcionalidad desactivada
-                            </span>
-                        </div>
                     </setting>
                     
-                    <!-- Estadísticas - Solo visibles cuando está activado -->
-                    <div class="row mt-3 mb-3" invisible="not almus_partner_confidential_enabled">
-                        <div class="col-lg-6">
-                            <div class="o_stat_box">
-                                <field name="almus_confidential_partners_count" widget="statinfo"/>
-                                <div class="o_stat_text">Contactos con Info Confidencial</div>
-                                <button name="action_open_confidential_partners" 
-                                        type="object" 
-                                        class="btn btn-link"
-                                        icon="fa-arrow-right">
-                                    Ver contactos
-                                </button>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="o_stat_box">
-                                <field name="almus_confidential_users_count" widget="statinfo"/>
-                                <div class="o_stat_text">Usuarios con Acceso</div>
-                                <button name="action_open_confidential_users" 
-                                        type="object" 
-                                        class="btn btn-link"
-                                        icon="fa-arrow-right">
-                                    Ver usuarios
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Información sobre la funcionalidad -->
-                    <div class="text-muted mb-3">
-                        <p>
-                            <i class="fa fa-shield text-info"/> Este módulo agrega una pestaña "Información Confidencial" en el formulario de contactos
-                            que solo es visible para usuarios con permisos específicos.
-                        </p>
-                        <div invisible="not almus_partner_confidential_enabled">
-                            <p class="mb-0">
-                                <strong>Campos protegidos:</strong> Nombre internacional, WeChat ID, WhatsApp, 
-                                términos de pago, condiciones de precios, información bancaria y notas internas.
-                            </p>
-                        </div>
-                        <div invisible="almus_partner_confidential_enabled" class="alert alert-warning">
-                            <i class="fa fa-warning"/> Cuando esta funcionalidad está desactivada, la pestaña de información confidencial 
-                            no será visible para ningún usuario, incluso si tienen los permisos asignados.
-                        </div>
-                    </div>
-                    
                     <!-- Instrucciones para administradores -->
-                    <div class="o_setting_box" invisible="not almus_partner_confidential_enabled">
-                        <div class="o_setting_box_title">
-                            <strong>¿Cómo otorgar acceso?</strong>
+                    <div class="o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <div class="o_setting_box_title">
+                                <strong>¿Cómo otorgar acceso?</strong>
+                            </div>
+                            <div class="text-muted">
+                                <p><strong>Importante:</strong> Los administradores del sistema NO tienen acceso automático a la información confidencial.</p>
+                                <ol class="mb-0">
+                                    <li>Ir a Configuración → Usuarios y Compañías → Usuarios</li>
+                                    <li>Seleccionar el usuario deseado</li>
+                                    <li>En la pestaña "Permisos de Acceso"</li>
+                                    <li>En la sección "Información Confidencial de Contactos"</li>
+                                    <li>Marcar:
+                                        <ul>
+                                            <li><strong>"Ver Información Confidencial"</strong> - Solo lectura</li>
+                                            <li><strong>"Administrar Información Confidencial"</strong> - Lectura y escritura</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                            </div>
                         </div>
-                        <div class="text-muted">
-                            <p><strong>Importante:</strong> Los administradores del sistema NO tienen acceso automático a la información confidencial.</p>
-                            <ol class="mb-0">
-                                <li>Ir a Configuración → Usuarios y Compañías → Usuarios</li>
-                                <li>Seleccionar el usuario deseado</li>
-                                <li>En la pestaña "Permisos de Acceso"</li>
-                                <li>En la sección "Información Confidencial de Contactos"</li>
-                                <li>Marcar:
-                                    <ul>
-                                        <li><strong>"Ver Información Confidencial"</strong> - Solo lectura</li>
-                                        <li><strong>"Administrar Información Confidencial"</strong> - Lectura y escritura</li>
-                                    </ul>
-                                </li>
-                            </ol>
-                        </div>
-                    </div>
-                    
-                    <!-- Advertencia sobre desactivación -->
-                    <div class="alert alert-info" invisible="not almus_partner_confidential_enabled">
-                        <p class="mb-0">
-                            <i class="fa fa-info-circle"/> Al desactivar esta funcionalidad, la información confidencial 
-                            existente NO se eliminará, pero no será accesible hasta que se reactive.
-                        </p>
                     </div>
                 </block>
             </xpath>

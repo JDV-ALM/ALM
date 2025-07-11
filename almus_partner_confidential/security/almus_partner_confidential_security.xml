@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Categoría para los grupos -->
+        <record id="module_category_almus_partner_confidential" model="ir.module.category">
+            <field name="name">Información Confidencial de Contactos</field>
+            <field name="description">Gestión de acceso a información confidencial de proveedores y contactos</field>
+            <field name="sequence">100</field>
+        </record>
+        
+        <!-- Grupo: Ver Información Confidencial (Solo lectura) -->
+        <record id="group_partner_confidential_user" model="res.groups">
+            <field name="name">Ver Información Confidencial</field>
+            <field name="category_id" ref="module_category_almus_partner_confidential"/>
+            <field name="comment">Permite ver la pestaña de información confidencial en los contactos (solo lectura)</field>
+        </record>
+        
+        <!-- Grupo: Administrar Información Confidencial (Lectura y Escritura) -->
+        <record id="group_partner_confidential_manager" model="res.groups">
+            <field name="name">Administrar Información Confidencial</field>
+            <field name="category_id" ref="module_category_almus_partner_confidential"/>
+            <field name="implied_ids" eval="[(4, ref('group_partner_confidential_user'))]"/>
+            <field name="comment">Permite ver y editar la información confidencial de los contactos</field>
+        </record>
+    </data>
+</odoo>

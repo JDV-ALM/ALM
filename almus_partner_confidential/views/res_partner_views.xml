@@ -6,84 +6,121 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <!-- Campo invisible para controlar la visibilidad de la pestaña -->
-            <xpath expr="//sheet" position="inside">
-                <field name="almus_show_confidential_tab" invisible="1"/>
-            </xpath>
-            
             <!-- Agregar pestaña de información confidencial después de Internal Notes -->
             <xpath expr="//page[@name='internal_notes']" position="after">
                 <page string="Información Confidencial" 
                       name="almus_confidential_info"
-                      invisible="not almus_show_confidential_tab"
                       groups="almus_partner_confidential.group_partner_confidential_user">
                     
-                    <!-- Nota informativa cuando está desactivado -->
-                    <div class="alert alert-warning" role="alert" invisible="almus_show_confidential_tab">
-                        <p class="mb-0">
-                            <i class="fa fa-warning"/> La funcionalidad de información confidencial está desactivada en la configuración.
-                        </p>
-                    </div>
-                    
-                    <group invisible="not almus_show_confidential_tab">
+                    <group>
                         <group string="Datos de Contacto Internacional">
                             <field name="almus_confidential_name" 
                                    placeholder="Nombre en idioma original o comercial internacional"
-                                   readonly="not context.get('force_readonly', False) and not user_has_groups('almus_partner_confidential.group_partner_confidential_manager')"/>
+                                   groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                            <field name="almus_confidential_name" 
+                                   placeholder="Nombre en idioma original o comercial internacional"
+                                   readonly="1"
+                                   groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
+                            
                             <field name="almus_confidential_email" 
                                    widget="email" 
                                    placeholder="correo@privado.com"
-                                   readonly="not context.get('force_readonly', False) and not user_has_groups('almus_partner_confidential.group_partner_confidential_manager')"/>
+                                   groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                            <field name="almus_confidential_email" 
+                                   widget="email" 
+                                   placeholder="correo@privado.com"
+                                   readonly="1"
+                                   groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
+                            
                             <field name="almus_wechat_id" 
                                    placeholder="ID de WeChat"
-                                   readonly="not context.get('force_readonly', False) and not user_has_groups('almus_partner_confidential.group_partner_confidential_manager')"/>
+                                   groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                            <field name="almus_wechat_id" 
+                                   placeholder="ID de WeChat"
+                                   readonly="1"
+                                   groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
+                            
                             <field name="almus_whatsapp_number" 
                                    widget="phone" 
                                    placeholder="+86 123 456 7890"
-                                   readonly="not context.get('force_readonly', False) and not user_has_groups('almus_partner_confidential.group_partner_confidential_manager')"/>
+                                   groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                            <field name="almus_whatsapp_number" 
+                                   widget="phone" 
+                                   placeholder="+86 123 456 7890"
+                                   readonly="1"
+                                   groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
+                            
                             <field name="almus_contact_person" 
                                    placeholder="Nombre de la persona clave"
-                                   readonly="not context.get('force_readonly', False) and not user_has_groups('almus_partner_confidential.group_partner_confidential_manager')"/>
+                                   groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                            <field name="almus_contact_person" 
+                                   placeholder="Nombre de la persona clave"
+                                   readonly="1"
+                                   groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
                         </group>
-                        <group string="Información de Auditoría">
-                            <field name="almus_confidential_last_update" readonly="1"/>
-                            <field name="almus_confidential_last_user" readonly="1"/>
+                        <group>
+                            <!-- Grupo vacío para mantener el layout -->
                         </group>
                     </group>
                     
-                    <group string="Condiciones Comerciales" invisible="not almus_show_confidential_tab">
+                    <group string="Condiciones Comerciales">
                         <field name="almus_payment_terms_notes" 
                                placeholder="Términos de pago especiales negociados con este proveedor..."
                                nolabel="1"
-                               readonly="not context.get('force_readonly', False) and not user_has_groups('almus_partner_confidential.group_partner_confidential_manager')"/>
+                               groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                        <field name="almus_payment_terms_notes" 
+                               placeholder="Términos de pago especiales negociados con este proveedor..."
+                               nolabel="1"
+                               readonly="1"
+                               groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
                     </group>
                     
-                    <group string="Información de Precios" invisible="not almus_show_confidential_tab">
+                    <group string="Información de Precios">
                         <field name="almus_price_conditions" 
                                placeholder="Descuentos, precios especiales, condiciones de volumen..."
                                nolabel="1"
-                               readonly="not context.get('force_readonly', False) and not user_has_groups('almus_partner_confidential.group_partner_confidential_manager')"/>
+                               groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                        <field name="almus_price_conditions" 
+                               placeholder="Descuentos, precios especiales, condiciones de volumen..."
+                               nolabel="1"
+                               readonly="1"
+                               groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
                     </group>
                     
-                    <group string="Información Bancaria" invisible="not almus_show_confidential_tab">
+                    <group string="Información Bancaria">
                         <field name="almus_bank_info" 
                                placeholder="Datos bancarios para transferencias internacionales, SWIFT, etc..."
                                nolabel="1"
-                               readonly="not context.get('force_readonly', False) and not user_has_groups('almus_partner_confidential.group_partner_confidential_manager')"/>
+                               groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                        <field name="almus_bank_info" 
+                               placeholder="Datos bancarios para transferencias internacionales, SWIFT, etc..."
+                               nolabel="1"
+                               readonly="1"
+                               groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
                     </group>
                     
-                    <group string="Información de Crédito" invisible="not almus_show_confidential_tab">
+                    <group string="Información de Crédito">
                         <field name="almus_credit_info" 
                                placeholder="Límites de crédito, historial de pagos, referencias..."
                                nolabel="1"
-                               readonly="not context.get('force_readonly', False) and not user_has_groups('almus_partner_confidential.group_partner_confidential_manager')"/>
+                               groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                        <field name="almus_credit_info" 
+                               placeholder="Límites de crédito, historial de pagos, referencias..."
+                               nolabel="1"
+                               readonly="1"
+                               groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
                     </group>
                     
-                    <group string="Notas Internas Confidenciales" invisible="not almus_show_confidential_tab">
+                    <group string="Notas Internas Confidenciales">
                         <field name="almus_internal_notes" 
                                placeholder="Información privada que no debe ser compartida..."
                                nolabel="1"
-                               readonly="not context.get('force_readonly', False) and not user_has_groups('almus_partner_confidential.group_partner_confidential_manager')"/>
+                               groups="almus_partner_confidential.group_partner_confidential_manager"/>
+                        <field name="almus_internal_notes" 
+                               placeholder="Información privada que no debe ser compartida..."
+                               nolabel="1"
+                               readonly="1"
+                               groups="almus_partner_confidential.group_partner_confidential_user,!almus_partner_confidential.group_partner_confidential_manager"/>
                     </group>
                 </page>
             </xpath>
@@ -97,17 +134,17 @@
         <field name="inherit_id" ref="base.view_partner_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='email']" position="after">
-                <!-- Solo mostrar si está activo Y el usuario tiene permisos -->
-                <field name="almus_show_confidential_tab" invisible="1"/>
                 <field name="almus_confidential_name" 
                        string="Nombre Int."
                        optional="hide"
-                       invisible="not almus_show_confidential_tab"
                        groups="almus_partner_confidential.group_partner_confidential_user"/>
                 <field name="almus_wechat_id" 
                        string="WeChat"
                        optional="hide"
-                       invisible="not almus_show_confidential_tab"
+                       groups="almus_partner_confidential.group_partner_confidential_user"/>
+                <field name="almus_has_confidential" 
+                       string="Info Conf."
+                       optional="hide"
                        groups="almus_partner_confidential.group_partner_confidential_user"/>
             </xpath>
         </field>
@@ -123,17 +160,7 @@
                 <separator groups="almus_partner_confidential.group_partner_confidential_user"/>
                 <filter string="Con Info Confidencial" 
                         name="has_confidential"
-                        domain="['|', '|', '|', '|', '|', '|', '|', '|', '|',
-                                ('almus_confidential_name', '!=', False),
-                                ('almus_confidential_email', '!=', False),
-                                ('almus_wechat_id', '!=', False),
-                                ('almus_whatsapp_number', '!=', False),
-                                ('almus_contact_person', '!=', False),
-                                ('almus_payment_terms_notes', '!=', False),
-                                ('almus_price_conditions', '!=', False),
-                                ('almus_bank_info', '!=', False),
-                                ('almus_internal_notes', '!=', False),
-                                ('almus_credit_info', '!=', False)]"
+                        domain="[('almus_has_confidential', '=', True)]"
                         groups="almus_partner_confidential.group_partner_confidential_user"/>
             </xpath>
         </field>
