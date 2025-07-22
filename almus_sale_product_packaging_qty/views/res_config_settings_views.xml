@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_almus_sale_packaging_res_config_settings" model="ir.ui.view">
+        <field name="name">almus.sale.packaging.res.config.settings.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority">99</field>
+        <field name="inherit_id" ref="almus_base.view_almus_base_res_config_settings"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='almus_app_settings']" position="inside">
+                <setting id="almus_sale_packaging_settings" 
+                         string="Cantidad por Empaque en Ventas"
+                         help="Muestra información de cantidad por empaque en el catálogo de productos"
+                         groups="base.group_user">
+                    <field name="almus_show_packaging_qty" invisible="1"/>
+                    <div class="content-group">
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <field name="almus_show_packaging_qty" 
+                                       class="o_light_label"
+                                       widget="boolean_toggle"
+                                       nolabel="1"/>
+                                <label for="almus_show_packaging_qty" class="o_light_label"/>
+                                <div class="text-muted mt-2">
+                                    <i class="fa fa-info-circle"/> 
+                                    Cuando está activado, se muestra la cantidad de unidades por empaque 
+                                    en la vista de catálogo de productos dentro del formulario de ventas.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="alert alert-info">
+                                    <p class="mb-0">
+                                        <strong>Nota:</strong> La cantidad por empaque debe configurarse 
+                                        individualmente en cada producto desde el formulario del producto.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
