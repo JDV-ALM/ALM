@@ -17,7 +17,7 @@
     "website": "https://www.almus.dev",
     "category": "Sales",
     "version": "18.0.1.0.0",
-    "depends": ["almus_base", "sale", "product", "account"],
+    "depends": ["almus_base", "sale", "product", "account", "stock"],  # ✅ Agregado 'stock'
     "installable": True,
     "auto_install": False,
     "application": True,
