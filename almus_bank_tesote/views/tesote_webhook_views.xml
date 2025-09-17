@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View for Webhook Configuration -->
+    <record id="view_tesote_webhook_form" model="ir.ui.view">
+        <field name="name">tesote.webhook.form</field>
+        <field name="model">tesote.webhook</field>
+        <field name="arch" type="xml">
+            <form string="Tesote Webhook Configuration">
+                <sheet>
+                    <widget name="web_ribbon" title="Inactive" bg_color="bg-danger" 
+                            attrs="{'invisible': [('active', '=', True)]}"/>
+                    <group>
+                        <group string="Webhook Endpoint">
+                            <field name="active" widget="boolean_toggle"/>
+                            <field name="webhook_url" widget="CopyClipboardChar" readonly="1"/>
+                            <field name="webhook_secret" password="True" readonly="1" groups="base.group_no_one"/>
+                            <button name="regenerate_secret" type="object" 
+                                    string="Regenerate Secret" 
+                                    class="btn-link"
+                                    groups="base.group_no_one"
+                                    confirm="Are you sure you want to regenerate the webhook secret? You will need to update it in Tesote."/>
+                        </group>
+                        <group string="Event Subscriptions">
+                            <field name="subscribe_account_update"/>
+                            <field name="subscribe_transaction_new"/>
+                            <field name="subscribe_balance_update"/>
+                        </group>
+                    </group>
+                    <group string="Statistics" col="4">
+                        <field name="last_received" readonly="1"/>
+                        <field name="events_received" readonly="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Setup Instructions">
+                            <div class="alert alert-info" role="alert">
+                                <h4 class="alert-heading">Tesote Webhook Setup</h4>
+                                <p>To receive real-time notifications from Tesote, configure the webhook in your Tesote account:</p>
+                                <ol>
+                                    <li>Log in to your Tesote account</li>
+                                    <li>Go to Settings → Webhooks</li>
+                                    <li>Add a new webhook with the URL shown above</li>
+                                    <li>Copy the secret key and save it securely</li>
+                                    <li>Select the events you want to receive</li>
+                                    <li>Save and test the webhook</li>
+                                </ol>
+                                <hr/>
+                                <p class="mb-0">
+                                    <strong>Note:</strong> Webhooks must be enabled in the Tesote configuration settings.
+                                </p>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Tree View for Webhook -->
+    <record id="view_tesote_webhook_tree" model="ir.ui.view">
+        <field name="name">tesote.webhook.tree</field>
+        <field name="model">tesote.webhook</field>
+        <field name="arch" type="xml">
+            <tree string="Tesote Webhooks" create="false" delete="false">
+                <field name="webhook_url"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="last_received"/>
+                <field name="events_received"/>
+            </tree>
+        </field>
+    </record>
+    
+    <!-- Action for Webhook -->
+    <record id="action_tesote_webhook_config" model="ir.actions.act_window">
+        <field name="name">Webhook Configuration</field>
+        <field name="res_model">tesote.webhook</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" ref="tesote_webhook_default"/>
+    </record>
+    
+    <!-- API Log Views -->
+    <record id="view_tesote_api_log_tree" model="ir.ui.view">
+        <field name="name">tesote.api.log.tree</field>
+        <field name="model">tesote.api.log</field>
+        <field name="arch" type="xml">
+            <tree string="API Logs" create="false" edit="false" delete="false">
+                <field name="create_date" string="Date"/>
+                <field name="endpoint"/>
+                <field name="method"/>
+                <field name="status_code" 
+                       decoration-success="status_code &gt;= 200 and status_code &lt; 300"
+                       decoration-warning="status_code &gt;= 300 and status_code &lt; 400"
+                       decoration-danger="status_code &gt;= 400"/>
+                <field name="response_time" string="Time (ms)"/>
+                <field name="error_message" optional="hide"/>
+                <field name="account_id" optional="show"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="view_tesote_api_log_form" model="ir.ui.view">
+        <field name="name">tesote.api.log.form</field>
+        <field name="model">tesote.api.log</field>
+        <field name="arch" type="xml">
+            <form string="API Log" create="false" edit="false" delete="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="create_date" string="Date/Time"/>
+                            <field name="endpoint"/>
+                            <field name="method"/>
+                            <field name="account_id"/>
+                        </group>
+                        <group>
+                            <field name="status_code"/>
+                            <field name="response_time"/>
+                        </group>
+                    </group>
+                    <group string="Error Details" attrs="{'invisible': [('error_message', '=', False)]}">
+                        <field name="error_message" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <record id="action_tesote_api_log" model="ir.actions.act_window">
+        <field name="name">API Logs</field>
+        <field name="res_model">tesote.api.log</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No API logs yet
+            </p>
+            <p>
+                API logs will appear here when synchronization starts.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Action for Tesote Statements -->
+    <record id="action_tesote_statements" model="ir.actions.act_window">
+        <field name="name">Tesote Bank Statements</field>
+        <field name="res_model">account.bank.statement</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('tesote_account_id', '!=', False)]</field>
+        <field name="context">{'search_default_journal': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Tesote statements yet
+            </p>
+            <p>
+                Bank statements will be created automatically when synchronizing transactions from Tesote.
+            </p>
+        </field>
+    </record>
+</odoo>

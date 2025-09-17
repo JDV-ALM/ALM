@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit Account Configuration Settings -->
+    <record id="view_account_config_settings_inherit_tesote" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.tesote</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Insert after the bank_cash block in Odoo 17 -->
+            <xpath expr="//div[@id='bank_cash']" position="after">
+                <h2>Tesote Bank Integration</h2>
+                <div class="row mt16 o_settings_container" id="tesote_integration">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="tesote_api_token"/>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." 
+                                  groups="base.group_multi_company"/>
+                            <div class="text-muted">
+                                Connect to Tesote API for automatic bank transaction import
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="tesote_api_token" string="API Token" class="col-lg-3 o_light_label"/>
+                                    <field name="tesote_api_token" password="True" class="col-lg-6"/>
+                                </div>
+                                <div class="row">
+                                    <label for="tesote_api_url" string="API URL" class="col-lg-3 o_light_label"/>
+                                    <field name="tesote_api_url" class="col-lg-6"/>
+                                </div>
+                                <div class="row">
+                                    <label for="tesote_connection_status" string="Status" class="col-lg-3 o_light_label"/>
+                                    <field name="tesote_connection_status" class="col-lg-4" readonly="1"/>
+                                    <button name="action_test_tesote_connection" 
+                                            type="object" 
+                                            string="Test Connection" 
+                                            class="btn-secondary col-lg-2"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="tesote_auto_sync"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="tesote_auto_sync"/>
+                            <div class="text-muted">
+                                Automatically synchronize transactions every 6 hours
+                            </div>
+                            <div class="content-group" attrs="{'invisible': [('tesote_auto_sync', '=', False)]}">
+                                <div class="mt8">
+                                    <label for="tesote_sync_days" string="Days to sync:"/>
+                                    <field name="tesote_sync_days" class="oe_inline" style="width: 50px;"/> days
+                                </div>
+                                <div class="mt8" attrs="{'invisible': [('tesote_last_sync', '=', False)]}">
+                                    <label for="tesote_last_sync" string="Last sync:"/>
+                                    <field name="tesote_last_sync" class="oe_inline" widget="datetime"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="tesote_webhook_enabled"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="tesote_webhook_enabled"/>
+                            <div class="text-muted">
+                                Receive real-time notifications for new transactions
+                            </div>
+                            <div class="content-group" attrs="{'invisible': [('tesote_webhook_enabled', '=', False)]}">
+                                <button name="%(action_tesote_webhook_config)d" 
+                                        type="action" 
+                                        string="Configure Webhooks" 
+                                        class="btn-link" 
+                                        icon="fa-arrow-right"/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label string="Bank Account Mapping"/>
+                            <div class="text-muted">
+                                Map Tesote accounts to Odoo journals
+                            </div>
+                            <div class="content-group">
+                                <div>
+                                    <button name="action_refresh_tesote_accounts" 
+                                            type="object" 
+                                            string="Refresh Accounts from Tesote" 
+                                            class="btn-secondary me-2"
+                                            icon="fa-refresh"/>
+                                    <button name="action_open_tesote_accounts" 
+                                            type="object" 
+                                            string="Configure Account Mapping" 
+                                            class="btn-link" 
+                                            icon="fa-arrow-right"/>
+                                    <span class="text-muted ms-2">
+                                        <field name="tesote_accounts_count" class="oe_inline"/> accounts configured
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

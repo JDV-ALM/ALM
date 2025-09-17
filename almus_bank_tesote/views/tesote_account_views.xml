@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View for Tesote Accounts (Editable) -->
+    <record id="view_tesote_account_tree" model="ir.ui.view">
+        <field name="name">tesote.account.tree</field>
+        <field name="model">tesote.account</field>
+        <field name="arch" type="xml">
+            <tree string="Tesote Bank Accounts" 
+                  editable="bottom" 
+                  decoration-success="journal_id and sync_status == 'success'"
+                  decoration-warning="not journal_id and active"
+                  decoration-danger="sync_status == 'error'"
+                  decoration-muted="not active">
+                <!-- Tesote Info (readonly) -->
+                <field name="bank_name" readonly="1" optional="show"/>
+                <field name="masked_account" readonly="1"/>
+                <field name="currency" readonly="1"/>
+                <field name="legal_entity_name" readonly="1" optional="show"/>
+                <field name="balance" readonly="1" widget="monetary" 
+                       options="{'currency_field': 'currency_id'}" optional="show"/>
+                
+                <!-- Manual Mapping -->
+                <field name="company_id" groups="base.group_multi_company" 
+                       options="{'no_create': True}"/>
+                <field name="journal_id" 
+                       domain="[('type','=','bank'),('company_id','=',company_id)]"
+                       options="{'no_create': True, 'no_open': True}"/>
+                <field name="statement_prefix" optional="hide"/>
+                <field name="active" widget="boolean_toggle"/>
+                
+                <!-- Status -->
+                <field name="last_sync" readonly="1" widget="datetime" optional="show"/>
+                <field name="sync_status" readonly="1" widget="badge" 
+                       decoration-success="sync_status == 'success'"
+                       decoration-warning="sync_status == 'syncing'"
+                       decoration-danger="sync_status == 'error'"
+                       optional="show"/>
+                <field name="statement_count" readonly="1" optional="show"/>
+                
+                <!-- Actions -->
+                <button name="action_sync_transactions" 
+                        type="object" 
+                        string="Sync" 
+                        icon="fa-refresh"
+                        attrs="{'invisible': ['|', ('journal_id', '=', False), ('sync_status', '=', 'syncing')]}"/>
+                <button name="action_view_statements" 
+                        type="object" 
+                        string="Statements" 
+                        icon="fa-list"
+                        attrs="{'invisible': [('statement_count', '=', 0)]}"/>
+            </tree>
+        </field>
+    </record>
+    
+    <!-- Form View for Tesote Accounts -->
+    <record id="view_tesote_account_form" model="ir.ui.view">
+        <field name="name">tesote.account.form</field>
+        <field name="model">tesote.account</field>
+        <field name="arch" type="xml">
+            <form string="Tesote Bank Account">
+                <header>
+                    <button name="action_sync_transactions" 
+                            type="object" 
+                            string="Sync Transactions" 
+                            class="btn-primary"
+                            attrs="{'invisible': ['|', ('journal_id', '=', False), ('sync_status', '=', 'syncing')]}"/>
+                    <button name="action_view_statements" 
+                            type="object" 
+                            string="View Statements" 
+                            class="btn-secondary"
+                            attrs="{'invisible': [('statement_count', '=', 0)]}"/>
+                    <field name="sync_status" widget="statusbar" statusbar_visible="never,success,error"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_statements" type="object" class="oe_stat_button" icon="fa-list">
+                            <field name="statement_count" widget="statinfo" string="Statements"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" 
+                            attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Tesote Information">
+                            <field name="tesote_id" readonly="1"/>
+                            <field name="bank_name" readonly="1"/>
+                            <field name="masked_account" readonly="1"/>
+                            <field name="legal_entity_name" readonly="1"/>
+                            <field name="currency" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="balance" readonly="1" widget="monetary"/>
+                        </group>
+                        <group string="Odoo Configuration">
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="journal_id" 
+                                   domain="[('type','=','bank'),('company_id','=',company_id)]"
+                                   options="{'no_create': True}"/>
+                            <field name="statement_prefix"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Synchronization" col="4">
+                            <field name="last_sync" readonly="1"/>
+                            <field name="sync_status" readonly="1"/>
+                            <field name="last_transaction_date" readonly="1"/>
+                            <field name="last_transaction_id" readonly="1" groups="base.group_no_one"/>
+                            <field name="sync_error_message" readonly="1" 
+                                   attrs="{'invisible': [('sync_error_message', '=', False)]}"
+                                   colspan="4"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Search View -->
+    <record id="view_tesote_account_search" model="ir.ui.view">
+        <field name="name">tesote.account.search</field>
+        <field name="model">tesote.account</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="display_name"/>
+                <field name="bank_name"/>
+                <field name="legal_entity_name"/>
+                <field name="journal_id"/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Mapped" name="mapped" domain="[('journal_id', '!=', False)]"/>
+                <filter string="Not Mapped" name="not_mapped" domain="[('journal_id', '=', False)]"/>
+                <separator/>
+                <filter string="VES" name="ves" domain="[('currency', '=', 'VES')]"/>
+                <filter string="USD" name="usd" domain="[('currency', '=', 'USD')]"/>
+                <separator/>
+                <filter string="Sync Error" name="sync_error" domain="[('sync_status', '=', 'error')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Bank" name="bank" context="{'group_by':'bank_name'}"/>
+                    <filter string="Currency" name="currency" context="{'group_by':'currency'}"/>
+                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Journal" name="journal" context="{'group_by':'journal_id'}"/>
+                    <filter string="Status" name="status" context="{'group_by':'sync_status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Action -->
+    <record id="action_tesote_account_list" model="ir.actions.act_window">
+        <field name="name">Tesote Bank Accounts</field>
+        <field name="res_model">tesote.account</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_tesote_account_search"/>
+        <field name="context">{'search_default_active': 1, 'search_default_mapped': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Tesote accounts found
+            </p>
+            <p>
+                Click "Refresh Accounts from Tesote" in the configuration to load your bank accounts.
+            </p>
+        </field>
+    </record>
+</odoo>
