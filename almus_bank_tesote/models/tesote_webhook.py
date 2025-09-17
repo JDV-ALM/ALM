@@ -4,6 +4,7 @@ import hashlib
 import hmac
 import json
 import logging
+from datetime import timedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -30,7 +31,10 @@ class TesoteWebhook(models.Model):
     def _compute_webhook_url(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
-            record.webhook_url = f"{base_url}/tesote/webhook/{record.id}"
+            if record.id:
+                record.webhook_url = f"{base_url}/tesote/webhook/{record.id}"
+            else:
+                record.webhook_url = f"{base_url}/tesote/webhook/[ID]"
     
     @api.model
     def _generate_secret(self):
