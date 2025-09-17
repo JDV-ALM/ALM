@@ -42,13 +42,16 @@ Website: www.almus.dev
     ],
     'assets': {
         'web.assets_backend': [
-            'almus_bank_tesote/static/src/js/tesote_widget.js',
+            # 'almus_bank_tesote/static/src/js/tesote_widget.js',  # Comentado hasta que se cree
         ],
     },
     'external_dependencies': {
-        'python': ['requests', 'dateutil'],
+        'python': ['requests'],  # dateutil ya viene con Odoo
     },
     'installable': True,
     'application': False,
     'auto_install': False,
+    'pre_init_hook': 'pre_init_hook',
+    'post_init_hook': 'post_init_hook',
+    'uninstall_hook': 'uninstall_hook',
 }

@@ -156,7 +156,8 @@ class TesoteAccount(models.Model):
             if not token:
                 raise UserError(_("Tesote API token not configured"))
             
-            from . import tesote_connector
+            # Import connector correctly
+            from odoo.addons.almus_bank_tesote.models import tesote_connector
             connector = tesote_connector.TesoteConnector(token, api_url, self.env)
             
             # Determine date range
@@ -334,7 +335,8 @@ class TesoteAccount(models.Model):
         if not token:
             raise UserError(_("Please configure the Tesote API token first"))
         
-        from . import tesote_connector
+        # Import connector correctly
+        from odoo.addons.almus_bank_tesote.models import tesote_connector
         connector = tesote_connector.TesoteConnector(token, api_url, self.env)
         
         try:

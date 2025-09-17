@@ -4,3 +4,4 @@ from . import tesote_account
 from . import tesote_webhook
 from . import account_bank_statement
 from . import res_config_settings
+from . import tesote_api_log

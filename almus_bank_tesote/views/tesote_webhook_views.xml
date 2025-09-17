@@ -5,20 +5,15 @@
         <field name="name">tesote.webhook.form</field>
         <field name="model">tesote.webhook</field>
         <field name="arch" type="xml">
-            <form string="Tesote Webhook Configuration">
+            <form string="Tesote Webhook Configuration" create="false" duplicate="false">
                 <sheet>
                     <widget name="web_ribbon" title="Inactive" bg_color="bg-danger" 
                             attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
                         <group string="Webhook Endpoint">
                             <field name="active" widget="boolean_toggle"/>
-                            <field name="webhook_url" widget="CopyClipboardChar" readonly="1"/>
+                            <field name="webhook_url" readonly="1"/>
                             <field name="webhook_secret" password="True" readonly="1" groups="base.group_no_one"/>
-                            <button name="regenerate_secret" type="object" 
-                                    string="Regenerate Secret" 
-                                    class="btn-link"
-                                    groups="base.group_no_one"
-                                    confirm="Are you sure you want to regenerate the webhook secret? You will need to update it in Tesote."/>
                         </group>
                         <group string="Event Subscriptions">
                             <field name="subscribe_account_update"/>
@@ -69,12 +64,21 @@
         </field>
     </record>
     
-    <!-- Action for Webhook -->
+    <!-- Action for Webhook Configuration (Singleton) -->
     <record id="action_tesote_webhook_config" model="ir.actions.act_window">
         <field name="name">Webhook Configuration</field>
         <field name="res_model">tesote.webhook</field>
         <field name="view_mode">form</field>
-        <field name="res_id" ref="tesote_webhook_default"/>
+        <field name="view_id" ref="view_tesote_webhook_form"/>
+        <field name="target">current</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure Tesote Webhooks
+            </p>
+            <p>
+                Set up real-time notifications for bank transactions.
+            </p>
+        </field>
     </record>
     
     <!-- API Log Views -->
@@ -82,7 +86,7 @@
         <field name="name">tesote.api.log.tree</field>
         <field name="model">tesote.api.log</field>
         <field name="arch" type="xml">
-            <tree string="API Logs" create="false" edit="false" delete="false">
+            <tree string="API Logs" create="false" edit="false" delete="false" default_order="create_date desc">
                 <field name="create_date" string="Date"/>
                 <field name="endpoint"/>
                 <field name="method"/>
@@ -123,10 +127,36 @@
         </field>
     </record>
     
+    <!-- Search View for API Logs -->
+    <record id="view_tesote_api_log_search" model="ir.ui.view">
+        <field name="name">tesote.api.log.search</field>
+        <field name="model">tesote.api.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="endpoint"/>
+                <field name="method"/>
+                <field name="account_id"/>
+                <filter string="Errors" name="errors" domain="[('status_code', '&gt;=', 400)]"/>
+                <filter string="Success" name="success" domain="[('status_code', '&lt;', 300)]"/>
+                <separator/>
+                <filter string="Today" name="today" domain="[('create_date', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0))]"/>
+                <filter string="Last 7 Days" name="week" domain="[('create_date', '&gt;=', (datetime.datetime.now() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Endpoint" name="endpoint" context="{'group_by':'endpoint'}"/>
+                    <filter string="Method" name="method" context="{'group_by':'method'}"/>
+                    <filter string="Status" name="status" context="{'group_by':'status_code'}"/>
+                    <filter string="Date" name="date" context="{'group_by':'create_date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
     <record id="action_tesote_api_log" model="ir.actions.act_window">
         <field name="name">API Logs</field>
         <field name="res_model">tesote.api.log</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_tesote_api_log_search"/>
+        <field name="context">{'search_default_week': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No API logs yet

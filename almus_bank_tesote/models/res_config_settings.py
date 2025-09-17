@@ -72,8 +72,8 @@ class ResConfigSettings(models.TransientModel):
         if not self.tesote_api_token:
             raise UserError(_("Please enter an API token first"))
         
-        # Import here to avoid circular dependency
-        from . import tesote_connector
+        # Import correctly from the addon path
+        from odoo.addons.almus_bank_tesote.models import tesote_connector
         
         connector = tesote_connector.TesoteConnector(
             self.tesote_api_token,
@@ -132,7 +132,7 @@ class ResConfigSettings(models.TransientModel):
             'type': 'ir.actions.act_window',
             'name': _('Tesote Bank Accounts'),
             'res_model': 'tesote.account',
-            'view_mode': 'tree',
+            'view_mode': 'tree,form',
             'view_id': self.env.ref('almus_bank_tesote.view_tesote_account_tree').id,
             'context': {'create': False}
         }

@@ -2,6 +2,8 @@
 from . import controllers
 from . import models
 
+from odoo import api, SUPERUSER_ID
+
 def pre_init_hook(cr):
     """Pre-initialization hook"""
     # Create VES currency if it doesn't exist
@@ -15,11 +17,9 @@ def pre_init_hook(cr):
 
 def post_init_hook(cr, registry):
     """Post-initialization hook"""
-    from odoo import api, SUPERUSER_ID
-    
     env = api.Environment(cr, SUPERUSER_ID, {})
     
-    # Create default webhook configuration
+    # Create default webhook configuration if not exists
     Webhook = env['tesote.webhook']
     if not Webhook.search([]):
         Webhook.create({
@@ -35,3 +35,19 @@ def post_init_hook(cr, registry):
         cron = env.ref('almus_bank_tesote.ir_cron_tesote_sync', raise_if_not_found=False)
         if cron:
             cron.active = True
+
+def uninstall_hook(cr, registry):
+    """Uninstall hook - cleanup"""
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    
+    # Remove configuration parameters
+    IrConfigParam = env['ir.config_parameter'].sudo()
+    params_to_delete = [
+        'tesote.api_token',
+        'tesote.api_url',
+        'tesote.auto_sync',
+        'tesote.sync_days',
+        'tesote.webhook_enabled'
+    ]
+    for param in params_to_delete:
+        IrConfigParam.search([('key', '=', param)]).unlink()
