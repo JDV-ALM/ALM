@@ -1,172 +1,240 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Tree View for Tesote Accounts (Editable) -->
+    <!-- Vista tree editable para cuentas -->
     <record id="view_tesote_account_tree" model="ir.ui.view">
         <field name="name">tesote.account.tree</field>
         <field name="model">tesote.account</field>
         <field name="arch" type="xml">
-            <tree string="Tesote Bank Accounts" 
-                  editable="bottom" 
-                  decoration-success="journal_id and sync_status == 'success'"
-                  decoration-warning="not journal_id and active"
+            <tree string="Mapeo de Cuentas Tesote" 
+                  editable="bottom"
+                  create="false"
+                  decoration-success="sync_status == 'success' and journal_id"
                   decoration-danger="sync_status == 'error'"
+                  decoration-warning="not journal_id and active"
                   decoration-muted="not active">
-                <!-- Tesote Info (readonly) -->
-                <field name="bank_name" readonly="1" optional="show"/>
-                <field name="masked_account" readonly="1"/>
-                <field name="currency" readonly="1"/>
-                <field name="legal_entity_name" readonly="1" optional="show"/>
-                <field name="currency_id" column_invisible="True"/>
-                <field name="balance" readonly="1" widget="monetary" 
-                       options="{'currency_field': 'currency_id'}" optional="show"/>
                 
-                <!-- Manual Mapping -->
-                <field name="company_id" column_invisible="True"/>
-                <field name="journal_id" 
-                       domain="[('type','=','bank')]"
-                       options="{'no_create': True, 'no_open': True}"/>
-                <field name="statement_prefix" optional="hide"/>
-                <field name="active" widget="boolean_toggle"/>
+                <!-- Información de Tesote (solo lectura) -->
+                <field name="bank_name" readonly="1" string="Banco"/>
+                <field name="masked_account" readonly="1" string="Cuenta"/>
+                <field name="currency" readonly="1" string="Moneda" widget="badge"/>
+                <field name="legal_entity_name" readonly="1" string="Titular" optional="show"/>
+                <field name="balance" readonly="1" string="Balance" widget="monetary"/>
                 
-                <!-- Status -->
-                <field name="last_sync" readonly="1" widget="datetime" optional="show"/>
-                <field name="sync_status" readonly="1" widget="badge" 
-                       decoration-success="sync_status == 'success'"
-                       decoration-warning="sync_status == 'syncing'"
-                       decoration-danger="sync_status == 'error'"
+                <!-- Configuración de mapeo (editable) -->
+                <field name="company_id" 
+                       groups="base.group_multi_company" 
+                       options="{'no_create': True}"
                        optional="show"/>
-                <field name="statement_count" readonly="1" optional="show"/>
+                <field name="journal_id" 
+                       string="Diario Contable"
+                       domain="[('type', '=', 'bank'), ('company_id', '=', company_id)]"
+                       options="{'no_create': True, 'no_open': True}"
+                       placeholder="Seleccione un diario..."/>
+                <field name="active" string="Activo" widget="boolean_toggle"/>
                 
-                <!-- Actions -->
+                <!-- Estado de sincronización (solo lectura) -->
+                <field name="last_sync" readonly="1" string="Última Sync" widget="datetime" optional="show"/>
+                <field name="sync_status" readonly="1" string="Estado" widget="badge"
+                       decoration-success="sync_status == 'success'"
+                       decoration-danger="sync_status == 'error'"
+                       decoration-muted="sync_status == 'never'"/>
+                <field name="transaction_count" readonly="1" string="Transacciones" sum="Total" optional="show"/>
+                
+                <!-- Campos ocultos necesarios -->
+                <field name="tesote_id" invisible="1"/>
+                <field name="sync_error" invisible="1"/>
+                
+                <!-- Botón de sincronización -->
                 <button name="action_sync_transactions" 
                         type="object" 
-                        string="Sync" 
+                        string="Sincronizar" 
+                        class="btn-link"
                         icon="fa-refresh"
-                        invisible="not journal_id or sync_status == 'syncing'"/>
-                <button name="action_view_statements" 
-                        type="object" 
-                        string="Statements" 
-                        icon="fa-list"
-                        invisible="statement_count == 0"/>
+                        attrs="{'invisible': ['|', ('journal_id', '=', False), ('active', '=', False)]}"
+                        confirm="¿Sincronizar transacciones de esta cuenta?"/>
             </tree>
         </field>
     </record>
     
-    <!-- Form View for Tesote Accounts -->
+    <!-- Vista formulario para cuentas (solo lectura principalmente) -->
     <record id="view_tesote_account_form" model="ir.ui.view">
         <field name="name">tesote.account.form</field>
         <field name="model">tesote.account</field>
         <field name="arch" type="xml">
-            <form string="Tesote Bank Account">
+            <form string="Cuenta Tesote" create="false" duplicate="false">
                 <header>
                     <button name="action_sync_transactions" 
                             type="object" 
-                            string="Sync Transactions" 
+                            string="Sincronizar Ahora" 
                             class="btn-primary"
-                            invisible="not journal_id or sync_status == 'syncing'"/>
-                    <button name="action_view_statements" 
-                            type="object" 
-                            string="View Statements" 
-                            class="btn-secondary"
-                            invisible="statement_count == 0"/>
-                    <field name="sync_status" widget="statusbar" statusbar_visible="success,error"/>
+                            icon="fa-refresh"
+                            attrs="{'invisible': ['|', ('journal_id', '=', False), ('active', '=', False)]}"/>
+                    <field name="sync_status" widget="statusbar" statusbar_visible="never,success,error"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="action_view_statements" type="object" class="oe_stat_button" icon="fa-list">
-                            <field name="statement_count" widget="statinfo" string="Statements"/>
-                        </button>
-                    </div>
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" 
-                            invisible="active"/>
                     <div class="oe_title">
                         <h1>
                             <field name="display_name" readonly="1"/>
                         </h1>
                     </div>
                     <group>
-                        <group string="Tesote Information">
+                        <group string="Información de Tesote">
                             <field name="tesote_id" readonly="1"/>
                             <field name="bank_name" readonly="1"/>
                             <field name="masked_account" readonly="1"/>
-                            <field name="legal_entity_name" readonly="1"/>
                             <field name="currency" readonly="1"/>
-                            <field name="currency_id" invisible="1"/>
+                            <field name="legal_entity_name" readonly="1"/>
                             <field name="balance" readonly="1" widget="monetary"/>
                         </group>
-                        <group string="Odoo Configuration">
-                            <field name="company_id"/>
+                        <group string="Configuración en Odoo">
+                            <field name="company_id" options="{'no_create': True}"/>
                             <field name="journal_id" 
-                                   domain="[('type','=','bank')]"
+                                   domain="[('type', '=', 'bank'), ('company_id', '=', company_id)]"
                                    options="{'no_create': True}"/>
-                            <field name="statement_prefix"/>
-                            <field name="active"/>
+                            <field name="active" widget="boolean_toggle"/>
                         </group>
-                        <group string="Synchronization" col="4">
+                    </group>
+                    <group string="Estado de Sincronización">
+                        <group>
                             <field name="last_sync" readonly="1"/>
+                            <field name="transaction_count" readonly="1"/>
+                        </group>
+                        <group>
                             <field name="sync_status" readonly="1"/>
-                            <field name="last_transaction_date" readonly="1"/>
-                            <field name="last_transaction_id" readonly="1" groups="base.group_no_one"/>
-                            <field name="sync_error_message" readonly="1" 
-                                   invisible="not sync_error_message"
-                                   colspan="4"/>
+                            <field name="sync_error" readonly="1" 
+                                   attrs="{'invisible': [('sync_error', '=', False)]}"/>
                         </group>
                     </group>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
-                </div>
             </form>
         </field>
     </record>
     
-    <!-- Search View -->
+    <!-- Vista de búsqueda -->
     <record id="view_tesote_account_search" model="ir.ui.view">
         <field name="name">tesote.account.search</field>
         <field name="model">tesote.account</field>
         <field name="arch" type="xml">
-            <search>
-                <field name="display_name"/>
+            <search string="Buscar Cuentas Tesote">
                 <field name="bank_name"/>
+                <field name="masked_account"/>
                 <field name="legal_entity_name"/>
                 <field name="journal_id"/>
-                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
-                <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+                
                 <separator/>
-                <filter string="Mapped" name="mapped" domain="[('journal_id', '!=', False)]"/>
-                <filter string="Not Mapped" name="not_mapped" domain="[('journal_id', '=', False)]"/>
+                
+                <filter string="Activas" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Inactivas" name="inactive" domain="[('active', '=', False)]"/>
+                
                 <separator/>
+                
+                <filter string="Con Diario" name="mapped" domain="[('journal_id', '!=', False)]"/>
+                <filter string="Sin Diario" name="not_mapped" domain="[('journal_id', '=', False)]"/>
+                
+                <separator/>
+                
+                <filter string="Sincronizado" name="synced" domain="[('sync_status', '=', 'success')]"/>
+                <filter string="Con Error" name="error" domain="[('sync_status', '=', 'error')]"/>
+                <filter string="Nunca Sincronizado" name="never" domain="[('sync_status', '=', 'never')]"/>
+                
+                <separator/>
+                
                 <filter string="VES" name="ves" domain="[('currency', '=', 'VES')]"/>
                 <filter string="USD" name="usd" domain="[('currency', '=', 'USD')]"/>
-                <separator/>
-                <filter string="Sync Error" name="sync_error" domain="[('sync_status', '=', 'error')]"/>
-                <group expand="0" string="Group By">
-                    <filter string="Bank" name="bank" context="{'group_by':'bank_name'}"/>
-                    <filter string="Currency" name="currency" context="{'group_by':'currency'}"/>
-                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Journal" name="journal" context="{'group_by':'journal_id'}"/>
-                    <filter string="Status" name="status" context="{'group_by':'sync_status'}"/>
+                
+                <group expand="0" string="Agrupar por">
+                    <filter string="Banco" name="group_bank" context="{'group_by': 'bank_name'}"/>
+                    <filter string="Moneda" name="group_currency" context="{'group_by': 'currency'}"/>
+                    <filter string="Diario" name="group_journal" context="{'group_by': 'journal_id'}"/>
+                    <filter string="Estado" name="group_status" context="{'group_by': 'sync_status'}"/>
+                    <filter string="Activo" name="group_active" context="{'group_by': 'active'}"/>
+                    <filter string="Compañía" name="group_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                 </group>
             </search>
         </field>
     </record>
     
-    <!-- Action -->
-    <record id="action_tesote_account_list" model="ir.actions.act_window">
-        <field name="name">Tesote Bank Accounts</field>
+    <!-- Vista kanban (opcional, para visualización rápida) -->
+    <record id="view_tesote_account_kanban" model="ir.ui.view">
+        <field name="name">tesote.account.kanban</field>
+        <field name="model">tesote.account</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="false">
+                <field name="bank_name"/>
+                <field name="masked_account"/>
+                <field name="currency"/>
+                <field name="balance"/>
+                <field name="journal_id"/>
+                <field name="sync_status"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="bank_name"/>
+                                    </strong>
+                                    <small class="o_kanban_record_subtitle text-muted">
+                                        <field name="masked_account"/>
+                                    </small>
+                                </div>
+                                <field name="currency" widget="badge"/>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <div class="text-muted">
+                                    <span>Balance: </span>
+                                    <field name="balance" widget="monetary"/>
+                                </div>
+                                <div t-if="record.journal_id.value">
+                                    <span class="text-muted">Diario: </span>
+                                    <field name="journal_id"/>
+                                </div>
+                                <div t-else="" class="text-warning">
+                                    <i class="fa fa-warning"/> Sin diario asignado
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <field name="sync_status" widget="badge"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="active" widget="boolean_toggle" nolabel="1"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    
+    <!-- Acción principal -->
+    <record id="action_tesote_accounts" model="ir.actions.act_window">
+        <field name="name">Mapeo de Cuentas Tesote</field>
         <field name="res_model">tesote.account</field>
-        <field name="view_mode">tree,form</field>
-        <field name="search_view_id" ref="view_tesote_account_search"/>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="context">{'search_default_active': 1, 'search_default_mapped': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                No Tesote accounts found
+                No se encontraron cuentas Tesote
             </p>
             <p>
-                Click "Refresh Accounts from Tesote" in the configuration to load your bank accounts.
+                Vaya a la configuración y haga clic en "Actualizar Cuentas" para cargar las cuentas desde Tesote.
             </p>
+            <p>
+                Luego podrá mapear cada cuenta a un diario contable para importar las transacciones.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Acción para sincronizar todas las cuentas -->
+    <record id="action_tesote_sync_all" model="ir.actions.server">
+        <field name="name">Sincronizar Todas las Cuentas</field>
+        <field name="model_id" ref="model_tesote_account"/>
+        <field name="binding_model_id" ref="model_tesote_account"/>
+        <field name="state">code</field>
+        <field name="code">
+records.action_sync_transactions()
         </field>
     </record>
 </odoo>

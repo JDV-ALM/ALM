@@ -1,0 +1,135 @@
+<odoo>
+    <!-- Vista formulario de configuración -->
+    <record id="view_tesote_config_form" model="ir.ui.view">
+        <field name="name">tesote.config.form</field>
+        <field name="model">tesote.config</field>
+        <field name="arch" type="xml">
+            <form string="Configuración Tesote" create="false" duplicate="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Configuración de Tesote</h1>
+                    </div>
+                    <group>
+                        <group string="Conexión API">
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="api_url"/>
+                            <field name="api_token" password="True" placeholder="Bearer token proporcionado por Tesote"/>
+                            <field name="connection_status" readonly="1" widget="badge" 
+                                   decoration-success="connection_status == 'success'"
+                                   decoration-danger="connection_status == 'error'"
+                                   decoration-warning="connection_status == 'not_tested'"/>
+                            <field name="last_connection_test" readonly="1" widget="datetime"/>
+                        </group>
+                        <group string="Sincronización">
+                            <field name="auto_sync" widget="boolean_toggle"/>
+                            <field name="sync_days" attrs="{'invisible': [('auto_sync', '=', False)]}"/>
+                            <field name="max_transactions"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Webhook" name="webhook">
+                            <group>
+                                <div class="alert alert-info" role="alert">
+                                    <h4 class="alert-heading">Configuración de Webhook</h4>
+                                    <p>Para recibir notificaciones en tiempo real desde Tesote:</p>
+                                    <ol>
+                                        <li>Configure este URL en su panel de Tesote:</li>
+                                        <li class="mt-2 mb-2"><strong style="font-size: 14px;"><field name="webhook_url" readonly="1" style="font-family: monospace;"/></strong></li>
+                                        <li>Cree una Automatización en Odoo (Configuración → Técnico → Automatizaciones):</li>
+                                        <ul>
+                                            <li>Modelo: tesote.account</li>
+                                            <li>Trigger: On Webhook</li>
+                                            <li>URL Path: tesote</li>
+                                        </ul>
+                                        <li>Use el código Python proporcionado en la documentación</li>
+                                    </ol>
+                                </div>
+                            </group>
+                        </page>
+                        <page string="Información" name="info">
+                            <group>
+                                <group string="Estado del Módulo">
+                                    <label for="company_id"/>
+                                    <div>
+                                        <field name="company_id" readonly="1" nolabel="1"/>
+                                    </div>
+                                    <label for="connection_status"/>
+                                    <div>
+                                        <field name="connection_status" readonly="1" nolabel="1"/>
+                                        <span attrs="{'invisible': [('last_connection_test', '=', False)]}">
+                                            - Última prueba: <field name="last_connection_test" readonly="1" nolabel="1" class="oe_inline"/>
+                                        </span>
+                                    </div>
+                                </group>
+                                <group string="Desarrollado por">
+                                    <div>
+                                        <p><strong>Almus Dev (JDV-ALM)</strong></p>
+                                        <p>Sitio web: <a href="https://www.almus.dev" target="_blank">www.almus.dev</a></p>
+                                        <p>Versión: 17.0.1.0.0</p>
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_test_connection" 
+                            type="object" 
+                            string="Probar Conexión" 
+                            class="btn-primary"
+                            icon="fa-plug"/>
+                    <button name="action_refresh_accounts" 
+                            type="object" 
+                            string="Actualizar Cuentas"
+                            class="btn-secondary"
+                            icon="fa-refresh"
+                            attrs="{'invisible': [('connection_status', '!=', 'success')]}"/>
+                    <button name="action_open_accounts" 
+                            type="object" 
+                            string="Mapear Cuentas"
+                            icon="fa-list"
+                            attrs="{'invisible': [('connection_status', '!=', 'success')]}"/>
+                    <button name="action_sync_all" 
+                            type="object" 
+                            string="Sincronizar Todo"
+                            icon="fa-cloud-download"
+                            confirm="¿Desea sincronizar todas las cuentas configuradas? Esto puede tomar varios minutos."
+                            attrs="{'invisible': [('connection_status', '!=', 'success')]}"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Vista tree para configuración (solo lectura) -->
+    <record id="view_tesote_config_tree" model="ir.ui.view">
+        <field name="name">tesote.config.tree</field>
+        <field name="model">tesote.config</field>
+        <field name="arch" type="xml">
+            <tree string="Configuraciones Tesote" create="false" delete="false">
+                <field name="company_id"/>
+                <field name="connection_status" widget="badge"
+                       decoration-success="connection_status == 'success'"
+                       decoration-danger="connection_status == 'error'"/>
+                <field name="auto_sync" widget="boolean_toggle"/>
+                <field name="last_connection_test" widget="datetime"/>
+            </tree>
+        </field>
+    </record>
+    
+    <!-- Acción para configuración -->
+    <record id="action_tesote_config" model="ir.actions.act_window">
+        <field name="name">Configuración Tesote</field>
+        <field name="res_model">tesote.config</field>
+        <field name="view_mode">form,tree</field>
+        <field name="target">current</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure Tesote para sincronizar sus cuentas bancarias
+            </p>
+            <p>
+                Ingrese su token de API y configure los parámetros de sincronización.
+            </p>
+        </field>
+    </record>
+</odoo>

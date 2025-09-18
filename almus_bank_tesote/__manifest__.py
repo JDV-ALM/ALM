@@ -3,54 +3,65 @@
     'name': 'Almus Bank Tesote',
     'version': '17.0.1.0.0',
     'category': 'Accounting/Accounting',
-    'summary': 'Tesote Bank Integration for automatic transaction import',
+    'summary': 'Integración bancaria Tesote para importación automática de transacciones',
     'description': """
-Almus Bank Tesote Integration
-==============================
+Almus Bank Tesote - Integración 
+===============================
 
-This module integrates Tesote API v2.0.0 for automatic bank transaction import:
-- Automatic bank account synchronization from Tesote
-- Manual mapping of bank accounts to accounting journals
-- Incremental transaction synchronization
-- Automatic bank statement generation
-- Webhook support for real-time notifications
+Módulo de integración con Tesote API v2.0.0:
 
-Developed by Almus Dev (JDV-ALM)
-Website: www.almus.dev
+Características principales:
+----------------------------
+* Sincronización automática de cuentas bancarias desde Tesote
+* Mapeo simple de cuentas a diarios contables
+* Importación incremental de transacciones con protección anti-bucles
+* Generación automática de extractos bancarios
+* Configuración independiente por compañía
+* Soporte para webhooks
+
+Protecciones de seguridad:
+--------------------------
+* Timeouts cortos (10 segundos máximo)
+* Límite de reintentos (máximo 2)
+* Rate limiting interno
+* Límite de transacciones por sincronización
+* Validación de datos antes de procesar
+
+Desarrollado por: Almus Dev (JDV-ALM)
+Sitio web: www.almus.dev
     """,
     'author': 'Almus Dev (JDV-ALM)',
     'website': 'https://www.almus.dev',
     'license': 'LGPL-3',
+    
     'depends': [
         'base',
         'account',
         'account_accountant',
     ],
+    
     'data': [
         # Security
         'security/ir.model.access.csv',
-        'security/tesote_security.xml',
         
         # Data
         'data/ir_cron.xml',
         
         # Views
+        'views/tesote_config_views.xml',
         'views/tesote_account_views.xml',
-        'views/tesote_webhook_views.xml',
-        'views/res_config_settings_views.xml',
         'views/menu_views.xml',
     ],
-    'assets': {
-        'web.assets_backend': [
-            # 'almus_bank_tesote/static/src/js/tesote_widget.js',  # Comentado hasta que se cree
-        ],
-    },
+    
     'external_dependencies': {
-        'python': ['requests'],  # dateutil ya viene con Odoo
+        'python': ['requests'],
     },
+    
     'installable': True,
     'application': False,
     'auto_install': False,
+    
+    
     'pre_init_hook': 'pre_init_hook',
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
