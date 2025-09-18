@@ -34,6 +34,8 @@ class TesoteConnector:
     def _log_api_call(self, endpoint: str, method: str, status_code: int, 
                       response_time: int, error_message: str = None, account_id=None):
         """Log API calls for debugging and monitoring"""
+        _logger.info(f"Tesote API Call: {method} {endpoint} - Status: {status_code} - Time: {response_time}ms")
+        
         if self.env and 'tesote.api.log' in self.env:
             try:
                 self.env['tesote.api.log'].sudo().create({
@@ -47,45 +49,59 @@ class TesoteConnector:
             except Exception as e:
                 _logger.error(f"Failed to log API call: {str(e)}")
     
-    def _handle_rate_limit(self, response):
-        """Handle API rate limiting"""
-        if 'X-RateLimit-Remaining' in response.headers:
-            self._rate_limit_remaining = int(response.headers['X-RateLimit-Remaining'])
-        if 'X-RateLimit-Reset' in response.headers:
-            self._rate_limit_reset = int(response.headers['X-RateLimit-Reset'])
-        
-        if response.status_code == 429:  # Too Many Requests
-            retry_after = response.headers.get('Retry-After', 60)
-            _logger.warning(f"Rate limit exceeded. Retrying after {retry_after} seconds")
-            time.sleep(int(retry_after))
-            return True
-        return False
-    
     def test_connection(self) -> Tuple[bool, str]:
-        """Test API connection and token validity"""
+        """Test API connection and token validity with timeout"""
+        _logger.info(f"Testing Tesote connection to: {self.base_url}")
+        
         try:
             start_time = time.time()
-            response = self.session.get(f'{self.base_url}/accounts', params={'per_page': 1})
+            
+            # Usar timeout más corto para test de conexión
+            response = self.session.get(
+                f'{self.base_url}/accounts', 
+                params={'per_page': 1},
+                timeout=10  # 10 segundos timeout
+            )
+            
             response_time = int((time.time() - start_time) * 1000)
             
             self._log_api_call('/accounts', 'GET', response.status_code, response_time)
             
             if response.status_code == 200:
+                _logger.info("Tesote connection successful")
                 return True, "Connection successful"
             elif response.status_code == 401:
-                return False, "Invalid API token"
+                _logger.error("Tesote API token is invalid")
+                return False, "Invalid API token - Please check your token"
+            elif response.status_code == 404:
+                _logger.error(f"Tesote API URL not found: {self.base_url}")
+                return False, f"API URL not found - Please check the URL: {self.base_url}"
             else:
+                _logger.error(f"Tesote connection failed with status: {response.status_code}")
                 return False, f"Connection failed: HTTP {response.status_code}"
                 
-        except requests.exceptions.RequestException as e:
+        except requests.exceptions.Timeout:
+            _logger.error("Tesote API connection timeout")
+            return False, "Connection timeout - The API is not responding. Please check your internet connection and API URL"
+            
+        except requests.exceptions.ConnectionError as e:
             _logger.error(f"Tesote API connection error: {str(e)}")
-            return False, f"Connection error: {str(e)}"
+            return False, f"Connection error - Cannot reach the API server. Please check the URL and your internet connection"
+            
+        except requests.exceptions.RequestException as e:
+            _logger.error(f"Tesote API request error: {str(e)}")
+            return False, f"Request error: {str(e)}"
+            
+        except Exception as e:
+            _logger.error(f"Unexpected error testing Tesote connection: {str(e)}")
+            return False, f"Unexpected error: {str(e)}"
     
     def get_accounts(self) -> List[Dict]:
         """
         Fetch all bank accounts from Tesote with pagination
         Returns list of account dictionaries
         """
+        _logger.info("Fetching accounts from Tesote API")
         accounts = []
         page = 1
         max_retries = 3
@@ -102,7 +118,10 @@ class TesoteConnector:
                     )
                     response_time = int((time.time() - start_time) * 1000)
                     
-                    if self._handle_rate_limit(response):
+                    if response.status_code == 429:  # Rate limit
+                        retry_after = response.headers.get('Retry-After', 60)
+                        _logger.warning(f"Rate limit hit, waiting {retry_after} seconds")
+                        time.sleep(int(retry_after))
                         retry_count += 1
                         continue
                     
@@ -133,7 +152,8 @@ class TesoteConnector:
                     
             else:  # All retries exhausted
                 break
-                
+        
+        _logger.info(f"Successfully fetched {len(accounts)} accounts")
         return accounts
     
     def get_transactions(self, account_id: str, start_date: str = None, 
@@ -160,8 +180,12 @@ class TesoteConnector:
             )
             response_time = int((time.time() - start_time) * 1000)
             
-            if self._handle_rate_limit(response):
-                # Retry once after rate limit
+            if response.status_code == 429:  # Rate limit
+                retry_after = response.headers.get('Retry-After', 60)
+                _logger.warning(f"Rate limit hit, waiting {retry_after} seconds")
+                time.sleep(int(retry_after))
+                
+                # Retry once
                 response = self.session.get(
                     f'{self.base_url}/accounts/{account_id}/transactions',
                     params=params,
@@ -186,90 +210,3 @@ class TesoteConnector:
         except requests.exceptions.RequestException as e:
             _logger.error(f"Error fetching transactions: {str(e)}")
             raise TesoteAPIError(f"Request failed: {str(e)}")
-    
-    def register_webhook(self, webhook_url: str, events: List[str], secret: str) -> Dict:
-        """
-        Register a webhook with Tesote API
-        
-        :param webhook_url: The URL where Tesote will send events
-        :param events: List of events to subscribe to
-        :param secret: Secret key for webhook verification
-        :return: Response from Tesote API
-        """
-        payload = {
-            'url': webhook_url,
-            'events': events,
-            'secret': secret,
-            'active': True
-        }
-        
-        try:
-            start_time = time.time()
-            response = self.session.post(
-                f'{self.base_url}/webhooks',
-                json=payload,
-                timeout=30
-            )
-            response_time = int((time.time() - start_time) * 1000)
-            
-            self._log_api_call('/webhooks', 'POST', response.status_code, response_time)
-            
-            if response.status_code not in [200, 201]:
-                raise TesoteAPIError(f"Failed to register webhook: HTTP {response.status_code}")
-            
-            return response.json()
-            
-        except requests.exceptions.RequestException as e:
-            _logger.error(f"Error registering webhook: {str(e)}")
-            raise TesoteAPIError(f"Webhook registration failed: {str(e)}")
-    
-    def delete_webhook(self, webhook_id: str) -> bool:
-        """
-        Delete a webhook from Tesote API
-        
-        :param webhook_id: ID of the webhook to delete
-        :return: True if successful
-        """
-        try:
-            start_time = time.time()
-            response = self.session.delete(
-                f'{self.base_url}/webhooks/{webhook_id}',
-                timeout=30
-            )
-            response_time = int((time.time() - start_time) * 1000)
-            
-            self._log_api_call(f'/webhooks/{webhook_id}', 'DELETE', response.status_code, response_time)
-            
-            return response.status_code in [200, 204]
-            
-        except requests.exceptions.RequestException as e:
-            _logger.error(f"Error deleting webhook: {str(e)}")
-            return False
-    
-    def get_account_balance(self, account_id: str) -> Optional[Dict]:
-        """
-        Get current balance for a specific account
-        
-        :param account_id: Tesote account ID
-        :return: Balance information or None
-        """
-        try:
-            start_time = time.time()
-            response = self.session.get(
-                f'{self.base_url}/accounts/{account_id}/balance',
-                timeout=30
-            )
-            response_time = int((time.time() - start_time) * 1000)
-            
-            self._log_api_call(f'/accounts/{account_id}/balance', 'GET', 
-                              response.status_code, response_time)
-            
-            if response.status_code == 200:
-                return response.json()
-            else:
-                _logger.warning(f"Failed to get balance for account {account_id}: HTTP {response.status_code}")
-                return None
-                
-        except requests.exceptions.RequestException as e:
-            _logger.error(f"Error fetching balance: {str(e)}")
-            return None

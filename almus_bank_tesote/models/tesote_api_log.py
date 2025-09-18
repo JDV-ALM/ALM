@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from datetime import timedelta
 
 class TesoteApiLog(models.Model):
     _name = 'tesote.api.log'

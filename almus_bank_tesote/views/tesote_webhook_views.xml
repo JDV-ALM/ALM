@@ -8,11 +8,11 @@
             <form string="Tesote Webhook Configuration" create="false" duplicate="false">
                 <sheet>
                     <widget name="web_ribbon" title="Inactive" bg_color="bg-danger" 
-                            attrs="{'invisible': [('active', '=', True)]}"/>
+                            invisible="active"/>
                     <group>
                         <group string="Webhook Endpoint">
                             <field name="active" widget="boolean_toggle"/>
-                            <field name="webhook_url" readonly="1"/>
+                            <field name="webhook_url" readonly="1" widget="url"/>
                             <field name="webhook_secret" password="True" readonly="1" groups="base.group_no_one"/>
                         </group>
                         <group string="Event Subscriptions">
@@ -119,7 +119,7 @@
                             <field name="response_time"/>
                         </group>
                     </group>
-                    <group string="Error Details" attrs="{'invisible': [('error_message', '=', False)]}">
+                    <group string="Error Details" invisible="not error_message">
                         <field name="error_message" nolabel="1"/>
                     </group>
                 </sheet>

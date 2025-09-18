@@ -2,10 +2,10 @@
 from . import controllers
 from . import models
 
-from odoo import api, SUPERUSER_ID
-
-def pre_init_hook(cr):
-    """Pre-initialization hook"""
+def pre_init_hook(env):
+    """Pre-initialization hook - Odoo 17 compatible"""
+    # En Odoo 17, el hook recibe env, no cr
+    cr = env.cr
     # Create VES currency if it doesn't exist
     cr.execute("""
         INSERT INTO res_currency (name, symbol, position, rounding, active, create_uid, write_uid, create_date, write_date)
@@ -15,9 +15,9 @@ def pre_init_hook(cr):
         )
     """)
 
-def post_init_hook(cr, registry):
-    """Post-initialization hook"""
-    env = api.Environment(cr, SUPERUSER_ID, {})
+def post_init_hook(env):
+    """Post-initialization hook - Odoo 17 compatible"""
+    # En Odoo 17, el hook recibe env directamente
     
     # Create default webhook configuration if not exists
     Webhook = env['tesote.webhook']
@@ -36,9 +36,9 @@ def post_init_hook(cr, registry):
         if cron:
             cron.active = True
 
-def uninstall_hook(cr, registry):
-    """Uninstall hook - cleanup"""
-    env = api.Environment(cr, SUPERUSER_ID, {})
+def uninstall_hook(env):
+    """Uninstall hook - cleanup - Odoo 17 compatible"""
+    # En Odoo 17, el hook recibe env directamente
     
     # Remove configuration parameters
     IrConfigParam = env['ir.config_parameter'].sudo()

@@ -136,3 +136,24 @@ class ResConfigSettings(models.TransientModel):
             'view_id': self.env.ref('almus_bank_tesote.view_tesote_account_tree').id,
             'context': {'create': False}
         }
+    
+    def action_open_tesote_webhooks(self):
+        """Open Tesote webhook configuration"""
+        # Get or create the webhook configuration
+        webhook = self.env['tesote.webhook'].search([], limit=1)
+        if not webhook:
+            webhook = self.env['tesote.webhook'].create({
+                'active': False,
+                'subscribe_account_update': True,
+                'subscribe_transaction_new': True,
+                'subscribe_balance_update': True,
+            })
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Webhook Configuration'),
+            'res_model': 'tesote.webhook',
+            'view_mode': 'form',
+            'res_id': webhook.id,
+            'target': 'current',
+        }

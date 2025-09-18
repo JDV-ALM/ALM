@@ -16,14 +16,14 @@
                 <field name="masked_account" readonly="1"/>
                 <field name="currency" readonly="1"/>
                 <field name="legal_entity_name" readonly="1" optional="show"/>
+                <field name="currency_id" column_invisible="True"/>
                 <field name="balance" readonly="1" widget="monetary" 
                        options="{'currency_field': 'currency_id'}" optional="show"/>
                 
                 <!-- Manual Mapping -->
-                <field name="company_id" groups="base.group_multi_company" 
-                       options="{'no_create': True}"/>
+                <field name="company_id" column_invisible="True"/>
                 <field name="journal_id" 
-                       domain="[('type','=','bank'),('company_id','=',company_id)]"
+                       domain="[('type','=','bank')]"
                        options="{'no_create': True, 'no_open': True}"/>
                 <field name="statement_prefix" optional="hide"/>
                 <field name="active" widget="boolean_toggle"/>
@@ -42,12 +42,12 @@
                         type="object" 
                         string="Sync" 
                         icon="fa-refresh"
-                        attrs="{'invisible': ['|', ('journal_id', '=', False), ('sync_status', '=', 'syncing')]}"/>
+                        invisible="not journal_id or sync_status == 'syncing'"/>
                 <button name="action_view_statements" 
                         type="object" 
                         string="Statements" 
                         icon="fa-list"
-                        attrs="{'invisible': [('statement_count', '=', 0)]}"/>
+                        invisible="statement_count == 0"/>
             </tree>
         </field>
     </record>
@@ -63,13 +63,13 @@
                             type="object" 
                             string="Sync Transactions" 
                             class="btn-primary"
-                            attrs="{'invisible': ['|', ('journal_id', '=', False), ('sync_status', '=', 'syncing')]}"/>
+                            invisible="not journal_id or sync_status == 'syncing'"/>
                     <button name="action_view_statements" 
                             type="object" 
                             string="View Statements" 
                             class="btn-secondary"
-                            attrs="{'invisible': [('statement_count', '=', 0)]}"/>
-                    <field name="sync_status" widget="statusbar" statusbar_visible="never,success,error"/>
+                            invisible="statement_count == 0"/>
+                    <field name="sync_status" widget="statusbar" statusbar_visible="success,error"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -78,7 +78,7 @@
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" 
-                            attrs="{'invisible': [('active', '=', True)]}"/>
+                            invisible="active"/>
                     <div class="oe_title">
                         <h1>
                             <field name="display_name" readonly="1"/>
@@ -95,9 +95,9 @@
                             <field name="balance" readonly="1" widget="monetary"/>
                         </group>
                         <group string="Odoo Configuration">
-                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_id"/>
                             <field name="journal_id" 
-                                   domain="[('type','=','bank'),('company_id','=',company_id)]"
+                                   domain="[('type','=','bank')]"
                                    options="{'no_create': True}"/>
                             <field name="statement_prefix"/>
                             <field name="active"/>
@@ -108,7 +108,7 @@
                             <field name="last_transaction_date" readonly="1"/>
                             <field name="last_transaction_id" readonly="1" groups="base.group_no_one"/>
                             <field name="sync_error_message" readonly="1" 
-                                   attrs="{'invisible': [('sync_error_message', '=', False)]}"
+                                   invisible="not sync_error_message"
                                    colspan="4"/>
                         </group>
                     </group>
